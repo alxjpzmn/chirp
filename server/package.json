@@ -1,0 +1,30 @@
+{
+  "name": "chirp",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "dev": "bun --watch index.ts"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.4.4",
+    "@stricjs/router": "^5.0.6",
+    "@types/dompurify": "^3.0.5",
+    "@types/jsdom": "^21.1.5",
+    "bullmq": "^4.13.2",
+    "dompurify": "^3.0.6",
+    "extract-domain": "^4.1.5",
+    "ffmpeg-static": "^5.2.0",
+    "ffprobe-static": "^3.1.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "jsdom": "^22.1.0",
+    "normalize-text": "^2.4.1",
+    "openai": "^4.17.4",
+    "textchunk": "^1.1.0"
+  }
+}
