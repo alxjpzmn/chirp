@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "129902ea-ffc4-41da-bec2-b05fa22488f8",
+  "id": "6c423bb5-ae34-45f2-8059-07e87a402a48",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "articles": {
@@ -18,7 +18,7 @@
           "name": "url",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "tts_id": {

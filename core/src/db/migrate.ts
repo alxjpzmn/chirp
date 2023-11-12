@@ -5,4 +5,4 @@ import { Database } from "bun:sqlite";
 
 const sqlite = new Database("chirp.db");
 const db = drizzle(sqlite);
-await migrate(db, { migrationsFolder: "./drizzle" });
+migrate(db, { migrationsFolder: "./drizzle" });

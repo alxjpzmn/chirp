@@ -3,7 +3,7 @@ import { sql } from "drizzle-orm";
 
 export const articles = sqliteTable("articles", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  url: text("url"),
+  url: text("url").notNull(),
   tts_id: integer("tts_id"),
   content: text("content"),
   created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),

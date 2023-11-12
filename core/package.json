@@ -28,8 +28,6 @@
     "jsdom": "^22.1.0",
     "normalize-text": "^2.4.1",
     "openai": "^4.17.4",
-    "sequelize": "^6.35.0",
-    "sqlite3": "^5.1.6",
     "textchunk": "^1.1.0"
   }
 }

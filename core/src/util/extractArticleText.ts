@@ -6,8 +6,6 @@ import { db } from "@db/init";
 import { articles } from "@db/schema";
 
 const extractArticleText = async (url: string) => {
-  console.log(`getting stuff for ${url}`);
-
   const rawResponse = await fetch(url);
 
   if (rawResponse.status !== 200) {
@@ -35,8 +33,6 @@ const extractArticleText = async (url: string) => {
   }
 
   const textContent = normalizeWhiteSpaces(article?.textContent);
-  console.log(textContent);
-  // save in sqlite
   await db.insert(articles).values({ url, content: textContent });
 };
 
