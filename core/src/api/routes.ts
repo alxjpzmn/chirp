@@ -1,5 +1,5 @@
 import { Router } from "@stricjs/router";
-import all from "../util/all";
+import all from "@util/all";
 
 const app = new Router();
 
