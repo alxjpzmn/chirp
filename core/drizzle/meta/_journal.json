@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1699821986888,
+      "tag": "0000_flippant_the_stranger",
+      "breakpoints": true
+    }
+  ]
+}

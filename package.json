@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "core": "pnpm --filter @chirp/core --",
-    "dev": "pnpm core run dev"
+    "dev": "pnpm core run dev",
+    "migrate": "pnpm core run migrate"
   },
   "keywords": [],
   "author": "",

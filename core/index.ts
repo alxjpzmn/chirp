@@ -1,3 +1,3 @@
-import app from "./src/api/routes";
+import api from "./src/api/routes";
 
-app.listen();
+api.listen();

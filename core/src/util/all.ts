@@ -7,9 +7,6 @@ import textchunk from "textchunk";
 import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
-import { Queue } from "bullmq";
-import { Worker } from "bullmq";
-import { QueueEvents } from "bullmq";
 
 const all = async () => {
   const rawResponse = await fetch(
@@ -20,24 +17,6 @@ const all = async () => {
       `Error getting input source, HTTP status code: ${rawResponse?.status}.`,
     );
   }
-
-  const queue = new Queue("Paint");
-
-  queue.add("cars", { color: "blue" });
-
-  new Worker("Paint", async (job) => {
-    if (job.name === "cars") {
-      console.log("processing job");
-    }
-  });
-
-  const queueEvents = new QueueEvents("Paint");
-
-  queueEvents.on("completed", ({ jobId }) => {
-    console.log(jobId);
-
-    console.log("done painting");
-  });
 
   const DOMWindow = new JSDOM("").window;
   const DOMPurify = createDOMPurify(DOMWindow);
@@ -58,8 +37,6 @@ const all = async () => {
   }
 
   const textContent = normalizeWhiteSpaces(article?.textContent);
-
-  console.log(textContent);
 
   const pathToFfmpeg = require("ffmpeg-static");
   const pathToFfprobe = require("ffprobe-static");

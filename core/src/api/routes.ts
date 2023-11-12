@@ -1,16 +1,21 @@
 import { Router } from "@stricjs/router";
-import all from "@util/all";
+import ExtractTextQueue, * as extractText from "@queue/extractText";
 
-const app = new Router();
+const api = new Router();
 
-app.post(
-  "/",
+api.post(
+  "/article",
   (ctx) => {
-    const { url, type } = ctx?.data;
-    console.log(url);
-    // all();
+    const { url } = ctx?.data;
+    const queue = new ExtractTextQueue();
+    const job: extractText.ExtractTextQueueJob = {
+      type: "article",
+      payload: { url },
+    };
+    queue.add(job);
+    return new Response();
   },
   { body: "json" },
 );
 
-export default app;
+export default api;
