@@ -1,5 +1,5 @@
 {
-  "name": "chirp",
+  "name": "@chirp/core",
   "module": "index.ts",
   "type": "module",
   "devDependencies": {

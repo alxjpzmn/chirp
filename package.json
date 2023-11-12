@@ -1,0 +1,13 @@
+{
+  "name": "@chirp/monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "core": "pnpm --filter @chirp/core --",
+    "dev": "pnpm core run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
