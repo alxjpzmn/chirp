@@ -7,8 +7,6 @@ import path from "path";
 const getTextToSpeechFile = async (text: string, jobId: number) => {
   const pathToFfmpeg = require("ffmpeg-static");
   const pathToFfprobe = require("ffprobe-static");
-  console.log(pathToFfprobe);
-  console.log(pathToFfmpeg);
   const ffmpeg = require("fluent-ffmpeg");
   ffmpeg.setFfmpegPath(pathToFfmpeg);
   ffmpeg.setFfprobePath(pathToFfprobe.path);
@@ -23,11 +21,15 @@ const getTextToSpeechFile = async (text: string, jobId: number) => {
     const basePath = path.resolve(".");
     console.log(basePath);
 
+    // read env for file directory here
+    // use tmp directory
+    // delete tmp files after creation
+
     const speechFilePath = `${basePath}/tts-${i}.mp3`;
     console.log(speechFilePath);
 
     const mp3 = await openai.audio.speech.create({
-      model: "tts-1",
+      model: "tts-1-hd",
       voice: "alloy",
       input: batch,
     });

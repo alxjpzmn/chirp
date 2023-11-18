@@ -30,8 +30,9 @@ api.post(
       .from(articles)
       .where(eq(articles.id, id))
       .all()[0];
-
-    getTextToSpeechFile(extracted_article?.content, extracted_article?.id);
+    if (extracted_article.content) {
+      getTextToSpeechFile(extracted_article?.content, extracted_article?.id);
+    }
     return new Response();
   },
   { body: "json" },

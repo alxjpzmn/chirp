@@ -18,10 +18,7 @@ class ExtractTextQueue {
     this.name = "extract_text";
     this.queue = new Queue(this.name);
     this.events = new Worker(this.name, async (job) => {
-      if (job.data.type === "article") {
-        console.log("new article incoming");
-        await extractArticleText(job.data.payload.url);
-      }
+      await extractArticleText(job.data.payload.url);
     });
   }
   public add(data: ExtractTextQueueJob) {
