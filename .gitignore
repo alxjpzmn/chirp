@@ -180,3 +180,11 @@ dist
 # SQLite database files
 *.db
 *.sqlite
+
+# Folders created by Chirp
+storage/
+
+# Files created by Chirp
+feed.xml
+
+

@@ -1,3 +1,3 @@
-import api from "./src/api/routes";
+import router from "src/router/index";
 
-api.listen();
+router();

@@ -26,8 +26,11 @@
     "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.2",
     "jsdom": "^22.1.0",
+    "music-metadata": "^7.14.0",
     "normalize-text": "^2.4.1",
     "openai": "^4.17.4",
+    "podcast": "^2.0.1",
+    "podparse": "^1.6.0",
     "textchunk": "^1.1.0"
   }
 }

@@ -5,10 +5,15 @@
   "main": "index.js",
   "scripts": {
     "core": "pnpm --filter @chirp/core --",
-    "dev": "pnpm core run dev",
+    "web": "pnpm --filter @chirp/web --",
+    "dev": "concurrently -n \"@chirp/core,@chirp/web\" -c \"blue,green\" \"pnpm core dev\" \"pnpm web dev\"",
+    "redis": "docker run --name redis -d --network host redis redis-server --save 60 1 --loglevel info",
     "migrate": "pnpm core run migrate"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
 }

@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "6c423bb5-ae34-45f2-8059-07e87a402a48",
+  "id": "0539eda8-b3f3-4a3f-8874-4c0203f89249",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "articles": {
@@ -14,6 +14,20 @@
           "notNull": true,
           "autoincrement": true
         },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "url": {
           "name": "url",
           "type": "text",
@@ -21,18 +35,11 @@
           "notNull": true,
           "autoincrement": false
         },
-        "tts_id": {
-          "name": "tts_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "content": {
           "name": "content",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "created_at": {
