@@ -49,16 +49,20 @@ const apiRequestRouter = async (req: Request): Promise<Response> => {
     return new Response();
   }
   if (url.pathname.includes("/audio") && method === "GET") {
-    const episodes = db
-      .select()
-      .from(articles)
-      .all()
-      .filter(async (episodeInDb) => {
-        const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${episodeInDb}.mp3`;
-        const episodeFile = Bun.file(episodeLocation);
-        const episodeExists = await episodeFile?.exists();
-        return episodeExists;
-      });
+    const articlesInDb = db.select().from(articles).all();
+
+    const episodes = [];
+
+    for (const articleInDb of articlesInDb) {
+      const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${articleInDb.id
+        }.mp3`;
+      const episodeFile = Bun.file(episodeLocation);
+      const episodeExists = await episodeFile?.exists();
+      if (episodeExists) {
+        episodes.push(articleInDb);
+      }
+    }
+
     console.log(episodes);
 
     return new Response(JSON.stringify(episodes));
