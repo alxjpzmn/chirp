@@ -3,7 +3,7 @@ import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
 import { normalizeWhiteSpaces } from "normalize-text";
 import { db } from "@db/init";
-import { articles } from "@db/schema";
+import { transcripts } from "@db/schema";
 
 const extractArticleText = async (url: string) => {
   try {
@@ -34,13 +34,13 @@ const extractArticleText = async (url: string) => {
     }
 
     const textContent = normalizeWhiteSpaces(article?.textContent);
-    await db.insert(articles).values({
+    await db.insert(transcripts).values({
       url,
       content: textContent,
       slug: article?.excerpt,
       title: article?.title,
+      source_type: "article",
     });
-    console.log(`New article added: ${url}`);
   } catch (error) {
     console.error(error);
   }

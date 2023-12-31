@@ -1,5 +1,5 @@
 import { db } from "@db/init";
-import { articles } from "@db/schema";
+import { transcripts } from "@db/schema";
 import {
   FEED_DATA_FOLDER_NAME,
   FILE_FOLDER_NAME,
@@ -23,18 +23,20 @@ interface EpisodeMetadata {
 
 const createFeed = async () => {
   try {
-    const db_entries = db.select().from(articles).all();
+    const transcripts = db.select().from(transcripts).all();
 
     const episodesToConsider = [];
-    for (const entry of db_entries) {
-      const recordingPath = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${entry.id
-        }.mp3`;
+    for (const entry of transcripts) {
+      const recordingPath = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${
+        entry.id
+      }.mp3`;
 
       const recordingFile = Bun.file(recordingPath);
 
       if (await recordingFile.exists()) {
         const { size, length } = await getAudioMetadata(
-          `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${entry.id
+          `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${
+            entry.id
           }.mp3`,
         );
         const episode: EpisodeMetadata = {

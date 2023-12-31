@@ -1,7 +1,7 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 
-export const articles = sqliteTable("articles", {
+export const transcripts = sqliteTable("transcripts", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title"),
   slug: text("slug"),
@@ -9,4 +9,5 @@ export const articles = sqliteTable("articles", {
   content: text("content").notNull(),
   created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
   updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
+  source_type: text("source_type").notNull().default("article"),
 });

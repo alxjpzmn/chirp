@@ -11,7 +11,7 @@ const staticRouter = async (req: Request): Promise<Response> => {
         .filter((segment) => segment !== "")
         .pop()}`,
     );
-    return new Response(await fileToServe, {
+    return new Response(fileToServe, {
       headers: {
         "Content-Type": fileToServe.type,
       },
@@ -19,7 +19,7 @@ const staticRouter = async (req: Request): Promise<Response> => {
   }
   const fileToServe = Bun.file(`${getBasePath()}/dist/index.html`);
 
-  return new Response(await fileToServe, {
+  return new Response(fileToServe, {
     headers: {
       "Content-Type": "text/html; charset=utf-8",
     },

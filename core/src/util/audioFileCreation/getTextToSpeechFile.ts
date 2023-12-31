@@ -1,4 +1,3 @@
-import textchunk from "textchunk";
 import OpenAI from "openai";
 import { rm } from "node:fs/promises";
 import createFolderIfNotExists from "@util/misc/createFolderIfNotExits";
@@ -8,6 +7,7 @@ import {
   FINISHED_RECORDINGS_RELATIVE_PATH,
   TEMP_RECORDINGS_RELATIVE_PATH,
 } from "@util/misc/constants";
+import chunk from "chunk-text";
 
 const getTextToSpeechFile = async (id: number, text: string) => {
   try {
@@ -18,7 +18,7 @@ const getTextToSpeechFile = async (id: number, text: string) => {
     ffmpeg.setFfprobePath(pathToFfprobe.path);
     const command = ffmpeg();
 
-    const textBatches: string[] = textchunk.chunk(text, 4000);
+    const textBatches: string[] = chunk(text, 4000);
 
     const openai = new OpenAI();
     const basePath = getBasePath();
@@ -50,7 +50,7 @@ const getTextToSpeechFile = async (id: number, text: string) => {
             await rm(`${basePath}/${TEMP_RECORDINGS_RELATIVE_PATH}/${id}`, {
               recursive: true,
             });
-            resolve();
+            resolve(true);
           })
           .on("error", (err: any) => {
             reject(new Error(`Merging audio files failed: ${err}`));

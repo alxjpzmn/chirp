@@ -1,11 +1,11 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "0539eda8-b3f3-4a3f-8874-4c0203f89249",
+  "id": "b9139c23-acb4-4e3e-a5c6-15f521937082",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "articles": {
-      "name": "articles",
+    "transcripts": {
+      "name": "transcripts",
       "columns": {
         "id": {
           "name": "id",
@@ -57,6 +57,14 @@
           "notNull": false,
           "autoincrement": false,
           "default": "CURRENT_TIMESTAMP"
+        },
+        "source_type": {
+          "name": "source_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'article'"
         }
       },
       "indexes": {},
