@@ -4,7 +4,6 @@ import { rm } from "node:fs/promises";
 import createFolderIfNotExists from "@util/misc/createFolderIfNotExits";
 import getBasePath from "@util/misc/getBasePath";
 import {
-  AUDIO_FOLDER_NAME,
   FILE_FOLDER_NAME,
   FINISHED_RECORDINGS_RELATIVE_PATH,
   TEMP_RECORDINGS_RELATIVE_PATH,
@@ -24,7 +23,6 @@ const getTextToSpeechFile = async (id: number, text: string) => {
     const openai = new OpenAI();
     const basePath = getBasePath();
     createFolderIfNotExists(`${basePath}/${FILE_FOLDER_NAME}`);
-    createFolderIfNotExists(`${basePath}/${AUDIO_FOLDER_NAME}`);
     createFolderIfNotExists(`${basePath}/${TEMP_RECORDINGS_RELATIVE_PATH}`);
     createFolderIfNotExists(`${basePath}/${FINISHED_RECORDINGS_RELATIVE_PATH}`);
     createFolderIfNotExists(
@@ -44,17 +42,21 @@ const getTextToSpeechFile = async (id: number, text: string) => {
       i++;
     }
     const outputFile = `${basePath}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${id}.mp3`;
-    command
-      .mergeToFile(outputFile)
-      .on("end", async () => {
-        console.log(`Audio file for text with ID:${id} created ✅`);
-        await rm(`${basePath}/${TEMP_RECORDINGS_RELATIVE_PATH}/${id}`, {
-          recursive: true,
-        });
-      })
-      .on("error", (err: any) => {
-        throw new Error(`Merging audio files failed: ${err}`);
-      });
+    const promisifiedFileCreation = () =>
+      new Promise((resolve, reject) =>
+        command
+          .mergeToFile(outputFile)
+          .on("end", async () => {
+            await rm(`${basePath}/${TEMP_RECORDINGS_RELATIVE_PATH}/${id}`, {
+              recursive: true,
+            });
+            resolve();
+          })
+          .on("error", (err: any) => {
+            reject(new Error(`Merging audio files failed: ${err}`));
+          }),
+      );
+    await promisifiedFileCreation();
   } catch (error) {
     console.error(error);
   }

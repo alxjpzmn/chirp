@@ -6,8 +6,13 @@ import GetAudioQueue, { GetAudioQueueJob } from "@queue/getAudio";
 import fallbackResponse from "@util/misc/fallbackResponse";
 import getBasePath from "@util/misc/getBasePath";
 import { FINISHED_RECORDINGS_RELATIVE_PATH } from "@util/misc/constants";
+import getServiceUrl from "@util/misc/getServiceUrl";
+import { Server } from "bun";
 
-const apiRequestRouter = async (req: Request): Promise<Response> => {
+const apiRequestRouter = async (
+  req: Request,
+  server: Server,
+): Promise<Response> => {
   const { method, url: urlString } = req;
   const url = new URL(urlString);
   if (url.pathname.includes("/health") && method === "GET") {
@@ -33,9 +38,9 @@ const apiRequestRouter = async (req: Request): Promise<Response> => {
     if (extracted_article.content) {
       const text: string = Bun.env.MAX_ARTICLE_CHARS
         ? extracted_article.content.slice(
-          0,
-          parseInt(Bun.env.MAX_ARTICLE_CHARS),
-        )
+            0,
+            parseInt(Bun.env.MAX_ARTICLE_CHARS),
+          )
         : extracted_article.content;
       const title: string = extracted_article.title ?? "Untitled Episode";
       const slug: string =
@@ -49,19 +54,50 @@ const apiRequestRouter = async (req: Request): Promise<Response> => {
     return new Response();
   }
   if (url.pathname.includes("/audio") && method === "GET") {
-    const episodes = db
-      .select()
-      .from(articles)
-      .all()
-      .filter(async (episodeInDb) => {
-        const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${episodeInDb}.mp3`;
-        const episodeFile = Bun.file(episodeLocation);
-        const episodeExists = await episodeFile?.exists();
-        return episodeExists;
-      });
-    console.log(episodes);
+    const articlesInDb = db.select().from(articles).all();
+
+    const episodes = [];
+    for (const articleInDb of articlesInDb) {
+      const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${
+        articleInDb.id
+      }.mp3`;
+      const episodeFile = Bun.file(episodeLocation);
+      const episodeExists = await episodeFile?.exists();
+
+      if (episodeExists) {
+        episodes.push(articleInDb);
+      }
+    }
 
     return new Response(JSON.stringify(episodes));
+  }
+  if (url.pathname.includes("/status") && method === "GET") {
+    const success = server.upgrade(req, {});
+    success
+      ? console.log("Upgrade to WebSocket connection successful")
+      : new Response("WebSocket upgrade error", { status: 400 });
+  }
+  if (url.pathname.includes("/transcripts") && method === "GET") {
+    const articlesInDb = db.select().from(articles).all();
+
+    const episodes = [];
+
+    for (const articleInDb of articlesInDb) {
+      const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${
+        articleInDb.id
+      }.mp3`;
+      const episodeFile = Bun.file(episodeLocation);
+      const episodeExists = await episodeFile?.exists();
+      if (!episodeExists) {
+        episodes.push(articleInDb);
+      }
+    }
+    return new Response(JSON.stringify(episodes));
+  }
+  if (url.pathname.includes("/feed") && method === "GET") {
+    return new Response(
+      JSON.stringify({ feedUrl: `${getServiceUrl()}/files/feed` }),
+    );
   }
   return fallbackResponse;
 };
