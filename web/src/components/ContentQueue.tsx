@@ -1,20 +1,14 @@
 import { Flex, Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import SubHeading from "./SubHeading";
 import { UilCheck } from "@iconscout/react-unicons";
+import useSWR from "swr";
+import { fetcher } from "../util/api";
 
 interface ContentQueueProps { }
 
 export const ContentQueue: React.FC<ContentQueueProps> = ({ }) => {
-  const [transcripts, setTranscripts] = useState([]);
-  useEffect(() => {
-    (async () => {
-      const res = await fetch("/api/transcripts");
-      const transcriptResponse = await res.json();
-
-      setTranscripts(transcriptResponse);
-    })();
-  }, []);
+  const { data: transcripts } = useSWR("/api/transcripts", fetcher);
 
   return (
     <>

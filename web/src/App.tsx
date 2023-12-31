@@ -16,10 +16,9 @@ import { EpisodeList } from "./components/EpisodeList";
 import { AddArticle } from "./components/AddArticle";
 import ContentQueue from "./components/ContentQueue";
 import { AudioQueue } from "./components/AudioQueue";
+import { TranscriptQueue } from "./components/TranscriptQueue";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   useEffect(() => {
     (async () => {
       const res = await fetch("/api/health");
@@ -38,14 +37,16 @@ function App() {
         p={[2, 8]}
       >
         <GridItem>
-          <DashboardColumn heading="Add Content"></DashboardColumn>
-          <DashboardSection>
-            <AddArticle />
-          </DashboardSection>
-          <Spacer h={8} />
-          <DashboardSection>
-            <ContentQueue />
-          </DashboardSection>
+          <DashboardColumn heading="Add Content">
+            <DashboardSection>
+              <AddArticle />
+            </DashboardSection>
+            <Spacer h={8} />
+            <DashboardSection>
+              <TranscriptQueue />
+              <ContentQueue />
+            </DashboardSection>
+          </DashboardColumn>
         </GridItem>
         <GridItem>
           <DashboardColumn heading="Listen">

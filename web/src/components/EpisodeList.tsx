@@ -1,5 +1,5 @@
 import { Flex, Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import SubHeading from "./SubHeading";
 import { UilTrash } from "@iconscout/react-unicons";
 import useSWR from "swr";
@@ -9,9 +9,6 @@ interface EpisodeListProps { }
 
 export const EpisodeList: React.FC<EpisodeListProps> = ({ }) => {
   const { data: episodes, error } = useSWR("/api/audio", fetcher);
-
-  console.log(episodes);
-
   return (
     <>
       {!!episodes?.length && (

@@ -23,10 +23,10 @@ interface EpisodeMetadata {
 
 const createFeed = async () => {
   try {
-    const transcripts = db.select().from(transcripts).all();
+    const stored_transcripts = db.select().from(transcripts).all();
 
     const episodesToConsider = [];
-    for (const entry of transcripts) {
+    for (const entry of stored_transcripts) {
       const recordingPath = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${
         entry.id
       }.mp3`;
