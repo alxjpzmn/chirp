@@ -8,7 +8,7 @@ import {
   WrapItem,
   useColorMode,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 // @ts-ignore
 import { UilRss } from "@iconscout/react-unicons";
 import SubHeading from "./SubHeading";
@@ -16,7 +16,7 @@ import SubHeading from "./SubHeading";
 const podcastApps = [
   {
     name: "Direct Link",
-    url: "https://",
+    url: "http://",
     color: "",
     rawIcon: <UilRss />,
   },
@@ -79,12 +79,17 @@ const podcastApps = [
 ];
 
 const RSSDisplay: React.FC = () => {
-  // const { user } = useUser();
-  // const [feedUrl, episodeLoading, error] = useDownloadURL(
-  //   user?.uid ? ref(storage, `gs://feeds/${user?.uid}/feed.xml`) : null
-  // );
+  const [feedUrl, setFeedUrl] = useState("");
 
-  const feedUrl = "https://feeds.pacific-content.com/unlisted";
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("/api/feed");
+      const data = await res.json();
+      if (data?.feedUrl) {
+        setFeedUrl(data?.feedUrl);
+      }
+    })();
+  }, []);
 
   const { colorMode } = useColorMode();
 

@@ -13,6 +13,9 @@ import { DashboardColumn } from "./components/DashboardColumn";
 import RSSDisplay from "./components/FeedDisplay";
 import DashboardSection from "./components/DashboardSection";
 import { EpisodeList } from "./components/EpisodeList";
+import { AddArticle } from "./components/AddArticle";
+import ContentQueue from "./components/ContentQueue";
+import { AudioQueue } from "./components/AudioQueue";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -36,17 +39,26 @@ function App() {
       >
         <GridItem>
           <DashboardColumn heading="Add Content"></DashboardColumn>
+          <DashboardSection>
+            <AddArticle />
+          </DashboardSection>
+          <Spacer h={8} />
+          <DashboardSection>
+            <ContentQueue />
+          </DashboardSection>
         </GridItem>
-        <DashboardColumn heading="Listen">
-          <DashboardSection>
-            <RSSDisplay />
-          </DashboardSection>
-          <Spacer />
-          <DashboardSection>
-            <EpisodeList />
-          </DashboardSection>
-        </DashboardColumn>
-        <GridItem></GridItem>
+        <GridItem>
+          <DashboardColumn heading="Listen">
+            <DashboardSection>
+              <RSSDisplay />
+            </DashboardSection>
+            <Spacer />
+            <DashboardSection>
+              <AudioQueue />
+              <EpisodeList />
+            </DashboardSection>
+          </DashboardColumn>
+        </GridItem>
       </Grid>
     </Box>
   );
