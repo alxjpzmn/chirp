@@ -48,9 +48,8 @@ const apiRequestRouter = (app: Elysia) => {
 
       const episodes = [];
       for (const transcript of stored_transcripts) {
-        const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${
-          transcript.id
-        }.mp3`;
+        const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${transcript.id
+          }.mp3`;
         const episodeFile = Bun.file(episodeLocation);
         const episodeExists = await episodeFile?.exists();
 
@@ -62,6 +61,8 @@ const apiRequestRouter = (app: Elysia) => {
       return new Response(JSON.stringify(episodes));
     })
     .delete("/audio/:episodeId", async ({ params: { episodeId } }) => {
+      console.log(episodeId);
+
       const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${episodeId}.mp3`;
       await unlink(episodeLocation);
       return new Response();
@@ -70,9 +71,8 @@ const apiRequestRouter = (app: Elysia) => {
       const stored_transcripts = db.select().from(transcripts).all();
       const episodes = [];
       for (const transcript of stored_transcripts) {
-        const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${
-          transcript.id
-        }.mp3`;
+        const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${transcript.id
+          }.mp3`;
         const episodeFile = Bun.file(episodeLocation);
         const episodeExists = await episodeFile?.exists();
         if (!episodeExists) {

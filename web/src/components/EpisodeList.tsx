@@ -5,13 +5,15 @@ import { Trash } from "@phosphor-icons/react";
 import useSWR from "swr";
 import { fetcher } from "../util/api";
 
-interface EpisodeListProps { }
+interface EpisodeListProps {}
 
-export const EpisodeList: React.FC<EpisodeListProps> = ({ }) => {
+export const EpisodeList: React.FC<EpisodeListProps> = ({}) => {
   const textColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
   const { data: episodes, mutate } = useSWR("/api/audio", fetcher);
 
   const deleteEpisode = async (episodeId) => {
+    console.log("del episode");
+
     await fetch(`/api/audio/${episodeId}`, { method: "DELETE" });
     mutate();
   };

@@ -1,5 +1,4 @@
 import getBasePath from "@util/misc/getBasePath";
-import { log } from "console";
 import Elysia from "elysia";
 
 const staticRouter = (app: Elysia) =>
