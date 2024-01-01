@@ -11,7 +11,6 @@ import getBasePath from "@util/misc/getBasePath";
 import getFeedMetadata from "./getFeedMetadata";
 import { Podcast } from "podcast";
 import getPodcastFromFeed from "podparse";
-import getServiceUrl from "@util/misc/getServiceUrl";
 
 interface EpisodeMetadata {
   title: string;
@@ -21,22 +20,20 @@ interface EpisodeMetadata {
   size: number;
 }
 
-const createFeed = async () => {
+const createFeed = async (host: string) => {
   try {
     const stored_transcripts = db.select().from(transcripts).all();
 
     const episodesToConsider = [];
     for (const entry of stored_transcripts) {
-      const recordingPath = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${
-        entry.id
-      }.mp3`;
+      const recordingPath = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${entry.id
+        }.mp3`;
 
       const recordingFile = Bun.file(recordingPath);
 
       if (await recordingFile.exists()) {
         const { size, length } = await getAudioMetadata(
-          `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${
-            entry.id
+          `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${entry.id
           }.mp3`,
         );
         const episode: EpisodeMetadata = {
@@ -56,7 +53,7 @@ const createFeed = async () => {
     );
 
     const feedPath = `${getBasePath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}/feed.xml`;
-    const feedMetadata = getFeedMetadata();
+    const feedMetadata = getFeedMetadata(host);
     const basePodcastData = new Podcast({ ...feedMetadata });
     const feedXml = basePodcastData.buildXml();
 
@@ -76,14 +73,15 @@ const createFeed = async () => {
         };
       }),
     );
+    console.log(host);
 
     for (const episode of episodesToConsider) {
       feed.addItem({
         title: episode.title,
         description: episode.slug,
-        url: getServiceUrl(),
+        url: host,
         enclosure: {
-          url: `${getServiceUrl()}/files/episode/${episode.id}`,
+          url: `${host}/files/episode/${episode.id}`,
           type: "audio/mpeg",
           size: episode.size,
         },

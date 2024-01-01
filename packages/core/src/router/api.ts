@@ -84,8 +84,6 @@ const apiRequestRouter = (app: Elysia) => {
     .delete(
       "/transcripts/:transcriptId",
       async ({ params: { transcriptId } }) => {
-        console.log(`deleting transcript ${transcriptId}`);
-
         await db.delete(transcripts).where(eq(transcripts.id, transcriptId));
         return new Response();
       },

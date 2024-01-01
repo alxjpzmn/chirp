@@ -36,7 +36,7 @@ const socketRouter = (app: Elysia) =>
         const queue = new Queue("extract_text", {
           connection: queueConnection,
         });
-        const jobs = await queue.getJobs(["active", "wait"]);
+        // const jobs = await queue.getJobs(["active", "wait"]);
 
         const transcript_events = new QueueEvents("extract_text", {
           connection: queueConnection,
@@ -56,7 +56,7 @@ const socketRouter = (app: Elysia) =>
           ws.send(JSON.stringify({ transcript_queue }));
         });
         transcript_events.on("completed", async ({ jobId }) => {
-          const job = await Job.fromId(queue, jobId);
+          // const job = await Job.fromId(queue, jobId);
           transcript_queue = transcript_queue.filter((item) => {
             return item.jobId.toString() !== jobId;
           });

@@ -19,10 +19,10 @@
       "bun-types" // add Bun global
     ],
     "paths": {
-      "@util/*": ["src/util/*"],
-      "@routes/*": ["src/routes/*"],
+      "@db/*": ["src/db/*"],
       "@queue/*": ["src/queue/*"],
-      "@db/*": ["src/db/*"]
+      "@util/*": ["src/util/*"],
+      "@router/*": ["src/router/*"]
     },
     "baseUrl": "."
   }

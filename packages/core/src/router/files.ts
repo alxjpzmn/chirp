@@ -6,11 +6,16 @@ import {
 import getBasePath from "@util/misc/getBasePath";
 import createFeed from "@util/feedCreation/createFeed";
 import Elysia from "elysia";
+import getServiceUrl from "@util/misc/getServiceUrl";
 
 const fileRequestRouter = (app: Elysia) =>
   app
-    .get("/feed", async () => {
-      await createFeed();
+    .get("/feed", async ({ headers }) => {
+      const host = `${Bun.env.SSL === "true" ? "https://" : "http://"}${headers.host
+        }`;
+      console.log(host);
+
+      await createFeed(host ?? getServiceUrl());
       return new Response(
         Bun.file(
           `${getBasePath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}/feed.xml`,

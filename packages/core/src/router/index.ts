@@ -1,8 +1,8 @@
 import { Elysia } from "elysia";
-import fileRequestRouter from "./files";
-import apiRequestRouter from "./api";
-import staticRouter from "./static";
-import socketRouter from "./sockets";
+import fileRequestRouter from "@router/files";
+import apiRequestRouter from "@router/api";
+import staticRouter from "@router/static";
+import socketRouter from "@router/sockets";
 
 const router = () =>
   new Elysia()

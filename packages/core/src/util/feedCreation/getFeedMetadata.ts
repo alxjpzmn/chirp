@@ -1,17 +1,15 @@
-import getServiceUrl from "@util/misc/getServiceUrl";
-
-const getFeedMetadata = () => {
+const getFeedMetadata = (host: string) => {
   return {
     title: "Chirp TTS Feed",
     author: "Chirp",
-    siteUrl: getServiceUrl(),
-    feedUrl: `${getServiceUrl()}/files/feed`,
-    imageUrl: `${getServiceUrl()}/files/cover`,
+    siteUrl: host,
+    feedUrl: `${host}/files/feed`,
+    imageUrl: `${host}/files/cover`,
     categories: ["News", "Daily News"],
     itunesCategory: [{ text: "News", subcats: [{ text: "Daily News" }] }],
     itunesAuthor: "Chirp",
     itunesSubtitle: "My personal feed of TTS'ed text content",
-    itunesImage: `${getServiceUrl()}/files/cover`,
+    itunesImage: `${host}/files/cover`,
     itunesExplicit: false,
     itunesOwner: { name: "Chirp", email: "no-reply@chirp" },
     language: "en",
