@@ -1,15 +1,17 @@
 import { Flex, Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
-import React from "react";
 import SubHeading from "./SubHeading";
-import { Waveform } from "@phosphor-icons/react";
+import { Trash, Waveform } from "@phosphor-icons/react";
 import useSWR from "swr";
 import { fetcher } from "../util/api";
 
-interface ContentQueueProps { }
-
-export const ContentQueue: React.FC<ContentQueueProps> = ({ }) => {
-  const { data: transcripts } = useSWR("/api/transcripts", fetcher);
+export const TranscriptList = ({ }) => {
+  const { data: transcripts, mutate } = useSWR("/api/transcripts", fetcher);
   const textColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
+
+  const deleteTranscript = async (transcriptId) => {
+    await fetch(`/api/transcripts/${transcriptId}`, { method: "DELETE" });
+    mutate();
+  };
 
   return (
     <>
@@ -38,20 +40,32 @@ export const ContentQueue: React.FC<ContentQueueProps> = ({ }) => {
             >
               {transcript?.slug}
             </Text>
-            <Button
-              onClick={async () =>
-                await fetch("/api/audio/", {
-                  method: "POST",
-                  body: JSON.stringify({ id: transcript?.id }),
-                })
-              }
-              size="xs"
-              color="green"
-              gap={1}
-            >
-              <Waveform size={16} weight="bold" />
-              Get Audio
-            </Button>
+            <Box width="100%" display="flex" justifyContent="space-between">
+              <Button
+                onClick={async () =>
+                  await fetch("/api/audio/", {
+                    method: "POST",
+                    body: JSON.stringify({ id: transcript?.id }),
+                  })
+                }
+                size="xs"
+                color="green"
+                gap={1}
+              >
+                <Waveform size={16} weight="bold" />
+                Get Audio
+              </Button>
+              <Button
+                onClick={() => deleteTranscript(transcript?.id)}
+                size="xs"
+                variant="link"
+                color="red"
+                gap={1}
+              >
+                <Trash size={16} weight="bold" />
+                Delete
+              </Button>
+            </Box>
           </Box>
         ))}
       </Box>
@@ -59,4 +73,4 @@ export const ContentQueue: React.FC<ContentQueueProps> = ({ }) => {
   );
 };
 
-export default ContentQueue;
+export default TranscriptList;

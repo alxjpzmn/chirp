@@ -9,7 +9,13 @@ interface EpisodeListProps { }
 
 export const EpisodeList: React.FC<EpisodeListProps> = ({ }) => {
   const textColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
-  const { data: episodes } = useSWR("/api/audio", fetcher);
+  const { data: episodes, mutate } = useSWR("/api/audio", fetcher);
+
+  const deleteEpisode = async (episodeId) => {
+    await fetch(`/api/audio/${episodeId}`, { method: "DELETE" });
+    mutate();
+  };
+
   return (
     <>
       {!!episodes?.length && (
@@ -38,23 +44,25 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({ }) => {
               >
                 {episode?.slug}
               </Text>
-              <Box mb={2} width="100%">
+              <Box mb={4} width="100%">
                 <audio
                   controls
                   style={{ width: "100%" }}
                   src={`http://localhost:3000/files/episode/${episode?.id}`}
                 />
               </Box>
-              <Button
-                onClick={() => console.log("delete action triggered")}
-                size="xs"
-                variant="link"
-                color="red"
-                gap={1}
-              >
-                <Trash size={16} weight="bold" />
-                Delete
-              </Button>
+              <Box width="100%" display="flex" justifyContent="flex-end">
+                <Button
+                  onClick={() => deleteEpisode(episode?.id)}
+                  size="xs"
+                  variant="link"
+                  color="red"
+                  gap={1}
+                >
+                  <Trash size={16} weight="bold" />
+                  Delete
+                </Button>
+              </Box>
             </Box>
           ))}
         </Box>

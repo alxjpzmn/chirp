@@ -4,7 +4,7 @@ import { useSWRConfig } from "swr";
 import type { SWRSubscriptionOptions } from "swr/subscription";
 import { useEffect } from "react";
 
-export const AudioQueue = () => {
+export const EpisodeQueue = () => {
   const { mutate } = useSWRConfig();
 
   const { data } = useSWRSubscription(

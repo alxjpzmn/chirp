@@ -1,10 +1,10 @@
 import getBasePath from "@util/misc/getBasePath";
 import { log } from "console";
+import Elysia from "elysia";
 
-const staticRouter = (app) =>
+const staticRouter = (app: Elysia) =>
   app
     .get("/", () => {
-      console.log("static route hit");
       const fileToServe = Bun.file(`${getBasePath()}/dist/index.html`);
 
       return new Response(fileToServe, {
@@ -14,9 +14,6 @@ const staticRouter = (app) =>
       });
     })
     .get("/:asset", ({ params: { asset } }) => {
-      console.log(asset);
-      console.log("static route asset hit");
-
       const fileToServe = Bun.file(`${getBasePath()}/dist/assets/${asset}`);
       return new Response(fileToServe, {
         headers: {

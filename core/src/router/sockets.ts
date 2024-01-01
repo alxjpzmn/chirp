@@ -1,12 +1,13 @@
 import { Job, QueueEvents, Queue } from "bullmq";
 import queueConnection from "@util/misc/queueConnection";
+import Elysia from "elysia";
 
-const socketRouter = (app) =>
+const socketRouter = (app: Elysia) =>
   app
     .ws("/audio_queue", {
       async open(ws) {
         const queue = new Queue("get_audio");
-        const jobs = await queue.getJobs(["active", "wait"]);
+        // const jobs = await queue.getJobs(["active", "wait"]);
 
         const audio_events = new QueueEvents("get_audio", {
           connection: queueConnection,
@@ -31,7 +32,7 @@ const socketRouter = (app) =>
     .ws("/transcripts_queue", {
       async open(ws) {
         const queue = new Queue("extract_text");
-        const jobs = await queue.getJobs(["active", "wait"]);
+        // const jobs = await queue.getJobs(["active", "wait"]);
 
         const audio_events = new QueueEvents("extract_text", {
           connection: queueConnection,
@@ -45,7 +46,7 @@ const socketRouter = (app) =>
           ws.send(JSON.stringify({ audioQueue }));
         });
         audio_events.on("completed", async ({ jobId }) => {
-          const job = await Job.fromId(queue, jobId);
+          // const job = await Job.fromId(queue, jobId);
           audioQueue = audioQueue.filter((item) => {
             return item.jobId.toString() !== jobId;
           });

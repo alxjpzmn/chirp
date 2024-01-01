@@ -5,8 +5,9 @@ import {
 } from "@util/misc/constants";
 import getBasePath from "@util/misc/getBasePath";
 import createFeed from "@util/feedCreation/createFeed";
+import Elysia from "elysia";
 
-const fileRequestRouter = (app) =>
+const fileRequestRouter = (app: Elysia) =>
   app
     .get("/feed", async () => {
       await createFeed();

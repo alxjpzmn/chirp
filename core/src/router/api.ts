@@ -3,12 +3,13 @@ import { db } from "@db/init";
 import { transcripts } from "@db/schema";
 import { eq } from "drizzle-orm";
 import GetAudioQueue, { GetAudioQueueJob } from "@queue/getAudio";
-import fallbackResponse from "@util/misc/fallbackResponse";
 import getBasePath from "@util/misc/getBasePath";
 import { FINISHED_RECORDINGS_RELATIVE_PATH } from "@util/misc/constants";
 import getServiceUrl from "@util/misc/getServiceUrl";
+import { unlink } from "node:fs/promises";
+import Elysia from "elysia";
 
-const apiRequestRouter = (app) => {
+const apiRequestRouter = (app: Elysia) => {
   return app
     ?.get("/health", () => "API is up")
     .post("/article", ({ body }) => {
@@ -43,7 +44,7 @@ const apiRequestRouter = (app) => {
       return new Response();
     })
     .get("/audio", async () => {
-      const stored_transcripts = await db.select().from(transcripts).all();
+      const stored_transcripts = db.select().from(transcripts).all();
 
       const episodes = [];
       for (const transcript of stored_transcripts) {
@@ -60,11 +61,14 @@ const apiRequestRouter = (app) => {
 
       return new Response(JSON.stringify(episodes));
     })
+    .delete("/audio/:episodeId", async ({ params: { episodeId } }) => {
+      const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${episodeId}.mp3`;
+      await unlink(episodeLocation);
+      return new Response();
+    })
     .get("/transcripts", async () => {
-      const stored_transcripts = await db.select().from(transcripts).all();
-
+      const stored_transcripts = db.select().from(transcripts).all();
       const episodes = [];
-
       for (const transcript of stored_transcripts) {
         const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${
           transcript.id
@@ -77,6 +81,15 @@ const apiRequestRouter = (app) => {
       }
       return new Response(JSON.stringify(episodes));
     })
+    .delete(
+      "/transcripts/:transcriptId",
+      async ({ params: { transcriptId } }) => {
+        console.log(`deleting transcript ${transcriptId}`);
+
+        await db.delete(transcripts).where(eq(transcripts.id, transcriptId));
+        return new Response();
+      },
+    )
     .get("/feed", () => {
       return new Response(
         JSON.stringify({ feedUrl: `${getServiceUrl()}/files/feed` }),

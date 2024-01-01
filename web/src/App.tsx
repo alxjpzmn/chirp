@@ -1,14 +1,14 @@
 import { useEffect } from "react";
-import "./App.css";
 import { Grid, GridItem, Box, Spacer } from "@chakra-ui/react";
 import { DashboardColumn } from "./components/DashboardColumn";
 import RSSDisplay from "./components/FeedDisplay";
 import DashboardSection from "./components/DashboardSection";
 import { EpisodeList } from "./components/EpisodeList";
 import { AddArticle } from "./components/AddArticle";
-import ContentQueue from "./components/ContentQueue";
-import { AudioQueue } from "./components/AudioQueue";
+import { TranscriptList } from "./components/TranscriptList";
+import { EpisodeQueue } from "./components/EpisodeQeue";
 import { TranscriptQueue } from "./components/TranscriptQueue";
+import "./App.css";
 
 function App() {
   useEffect(() => {
@@ -36,7 +36,7 @@ function App() {
             <Spacer h={8} />
             <DashboardSection>
               <TranscriptQueue />
-              <ContentQueue />
+              <TranscriptList />
             </DashboardSection>
           </DashboardColumn>
         </GridItem>
@@ -47,7 +47,7 @@ function App() {
             </DashboardSection>
             <Spacer />
             <DashboardSection>
-              <AudioQueue />
+              <EpisodeQueue />
               <EpisodeList />
             </DashboardSection>
           </DashboardColumn>
