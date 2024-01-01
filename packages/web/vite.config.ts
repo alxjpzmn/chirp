@@ -29,10 +29,15 @@ export default defineConfig({
         },
       },
       "/sockets": {
-        target: `ws://0.0.0.0:3000`,
+        target: "ws://0.0.0.0:3000",
         changeOrigin: true,
         secure: false,
         ws: true,
+      },
+      "/files": {
+        target: "http://0.0.0.0:3000",
+        changeOrigin: true,
+        secure: false,
       },
     },
   },

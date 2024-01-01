@@ -10,7 +10,7 @@ import SubHeading from "./SubHeading";
 import { useForm } from "react-hook-form";
 import isHTTPUrl from "../util/isHttpUrl";
 
-export const AddArticle = ({ }) => {
+export const AddArticle = ({}) => {
   const {
     handleSubmit,
     register,

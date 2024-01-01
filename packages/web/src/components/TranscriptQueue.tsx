@@ -7,7 +7,12 @@ export const TranscriptQueue = () => {
     `ws://${window.location.host}/sockets/transcripts_queue`,
     (key, { next }) => {
       const socket = new WebSocket(key);
+      socket.addEventListener("open", (event) => {
+        console.log(event);
+      });
       socket.addEventListener("message", (event) => {
+        console.log(event);
+
         mutate("/api/transcripts");
         return next(null, JSON.parse(event.data));
       });

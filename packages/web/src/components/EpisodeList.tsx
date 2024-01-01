@@ -12,8 +12,6 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({}) => {
   const { data: episodes, mutate } = useSWR("/api/audio", fetcher);
 
   const deleteEpisode = async (episodeId) => {
-    console.log("del episode");
-
     await fetch(`/api/audio/${episodeId}`, { method: "DELETE" });
     mutate();
   };
@@ -50,7 +48,7 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({}) => {
                 <audio
                   controls
                   style={{ width: "100%" }}
-                  src={`http://localhost:3000/files/episode/${episode?.id}`}
+                  src={`/files/episode/${episode?.id}`}
                 />
               </Box>
               <Box width="100%" display="flex" justifyContent="flex-end">
