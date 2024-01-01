@@ -7,6 +7,7 @@ import socketRouter from "./sockets";
 const router = () =>
   new Elysia()
     .group("/", (app) => staticRouter(app))
+    .group("/assets", (app) => staticRouter(app))
     .group("/api", (app) => apiRequestRouter(app))
     .group("/files", (app) => fileRequestRouter(app))
     .group("/sockets", (app) => socketRouter(app))

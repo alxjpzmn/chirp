@@ -1,6 +1,7 @@
 import { Flex, Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 import SubHeading from "./SubHeading";
+// @ts-ignore
 import { UilTrash } from "@iconscout/react-unicons";
 import useSWR from "swr";
 import { fetcher } from "../util/api";
@@ -8,7 +9,8 @@ import { fetcher } from "../util/api";
 interface EpisodeListProps { }
 
 export const EpisodeList: React.FC<EpisodeListProps> = ({ }) => {
-  const { data: episodes, error } = useSWR("/api/audio", fetcher);
+  const textColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
+  const { data: episodes } = useSWR("/api/audio", fetcher);
   return (
     <>
       {!!episodes?.length && (
@@ -23,25 +25,14 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({ }) => {
                 {episode?.title}
               </Text>
               <Flex mb={2}>
-                <Text
-                  fontSize="xs"
-                  // eslint-disable-next-line react-hooks/rules-of-hooks
-                  textColor={useColorModeValue(
-                    "blackAlpha.700",
-                    "whiteAlpha.700",
-                  )}
-                >
+                <Text fontSize="xs" textColor={textColor}>
                   {episode?.url}
                 </Text>
               </Flex>
               <Text
                 w="100%"
                 fontSize="sm"
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                textColor={useColorModeValue(
-                  "blackAlpha.700",
-                  "whiteAlpha.700",
-                )}
+                textColor={textColor}
                 noOfLines={2}
                 wordBreak="break-word"
                 mb={4}

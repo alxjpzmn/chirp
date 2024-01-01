@@ -1,6 +1,7 @@
 import { Flex, Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 import SubHeading from "./SubHeading";
+// @ts-ignore
 import { UilCheck } from "@iconscout/react-unicons";
 import useSWR from "swr";
 import { fetcher } from "../util/api";
@@ -9,6 +10,7 @@ interface ContentQueueProps { }
 
 export const ContentQueue: React.FC<ContentQueueProps> = ({ }) => {
   const { data: transcripts } = useSWR("/api/transcripts", fetcher);
+  const textColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
 
   return (
     <>
@@ -23,22 +25,14 @@ export const ContentQueue: React.FC<ContentQueueProps> = ({ }) => {
               {transcript?.title}
             </Text>
             <Flex mb={2}>
-              <Text
-                fontSize="xs"
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                textColor={useColorModeValue(
-                  "blackAlpha.700",
-                  "whiteAlpha.700",
-                )}
-              >
+              <Text fontSize="xs" textColor={textColor}>
                 {transcript?.url}
               </Text>
             </Flex>
             <Text
               w="100%"
               fontSize="sm"
-              // eslint-disable-next-line react-hooks/rules-of-hooks
-              textColor={useColorModeValue("blackAlpha.700", "whiteAlpha.700")}
+              textColor={textColor}
               noOfLines={2}
               wordBreak="break-word"
               mb={4}

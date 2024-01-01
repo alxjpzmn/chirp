@@ -3,7 +3,7 @@ import queueConnection from "@util/misc/queueConnection";
 
 const socketRouter = (app) =>
   app
-    .ws("/status/audio", {
+    .ws("/audio_queue", {
       async open(ws) {
         const queue = new Queue("get_audio");
         const jobs = await queue.getJobs(["active", "wait"]);
@@ -28,7 +28,7 @@ const socketRouter = (app) =>
         });
       },
     })
-    .ws("/status/transcripts", {
+    .ws("/transcripts_queue", {
       async open(ws) {
         const queue = new Queue("extract_text");
         const jobs = await queue.getJobs(["active", "wait"]);

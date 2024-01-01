@@ -1,14 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
-import {
-  Grid,
-  GridItem,
-  Box,
-  Card,
-  Heading,
-  VStack,
-  Spacer,
-} from "@chakra-ui/react";
+import { Grid, GridItem, Box, Spacer } from "@chakra-ui/react";
 import { DashboardColumn } from "./components/DashboardColumn";
 import RSSDisplay from "./components/FeedDisplay";
 import DashboardSection from "./components/DashboardSection";

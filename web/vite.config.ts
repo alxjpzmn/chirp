@@ -11,11 +11,10 @@ export default defineConfig({
     port: 3001,
     proxy: {
       "/api": {
-        target: `http://0.0.0.0:3000/api`,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        target: `http://0.0.0.0:3000`,
         changeOrigin: true,
         secure: false,
-        ws: true,
+        ws: false,
         configure: (proxy, _options) => {
           proxy.on("error", (err, _req, _res) => {
             console.log("proxy error", err);
@@ -31,6 +30,12 @@ export default defineConfig({
             );
           });
         },
+      },
+      "/sockets": {
+        target: `ws://0.0.0.0:3000`,
+        changeOrigin: true,
+        secure: false,
+        ws: true,
       },
     },
   },

@@ -17,9 +17,8 @@ export const AddArticle = ({ }) => {
     formState: { errors, isSubmitting },
   } = useForm();
 
+  // @ts-ignore
   const onSubmit = async (values) => {
-    console.log("Form submitted");
-    console.log(values);
     await fetch("/api/article", {
       method: "POST",
       body: JSON.stringify({ url: values.url }),
