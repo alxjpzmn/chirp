@@ -9,8 +9,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-// @ts-ignore
-import { UilRss } from "@iconscout/react-unicons";
+import { Rss } from "@phosphor-icons/react";
 import SubHeading from "./SubHeading";
 
 const podcastApps = [
@@ -18,7 +17,7 @@ const podcastApps = [
     name: "Direct Link",
     url: "http://",
     color: "",
-    rawIcon: <UilRss />,
+    rawIcon: <Rss size={24} weight="bold" />,
   },
   {
     name: "Apple Podcasts",

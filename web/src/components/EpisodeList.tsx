@@ -1,8 +1,7 @@
 import { Flex, Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 import SubHeading from "./SubHeading";
-// @ts-ignore
-import { UilTrash } from "@iconscout/react-unicons";
+import { Trash } from "@phosphor-icons/react";
 import useSWR from "swr";
 import { fetcher } from "../util/api";
 
@@ -53,7 +52,7 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({ }) => {
                 color="red"
                 gap={1}
               >
-                <UilTrash size={16} />
+                <Trash size={16} weight="bold" />
                 Delete
               </Button>
             </Box>

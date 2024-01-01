@@ -1,8 +1,7 @@
 import { Flex, Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 import SubHeading from "./SubHeading";
-// @ts-ignore
-import { UilCheck } from "@iconscout/react-unicons";
+import { Waveform } from "@phosphor-icons/react";
 import useSWR from "swr";
 import { fetcher } from "../util/api";
 
@@ -50,7 +49,7 @@ export const ContentQueue: React.FC<ContentQueueProps> = ({ }) => {
               color="green"
               gap={1}
             >
-              <UilCheck size={16} />
+              <Waveform size={16} weight="bold" />
               Get Audio
             </Button>
           </Box>
