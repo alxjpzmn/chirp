@@ -5,7 +5,7 @@ import {
 } from "@util/misc/constants";
 import createFolderIfNotExists from "@util/misc/createFolderIfNotExits";
 import getAudioMetadata from "@util/misc/getAudioMetadata";
-import getBasePath from "@util/misc/getBasePath";
+import getDataDirPath from "@util/misc/getDataDirPath";
 import getFeedMetadata from "./getFeedMetadata";
 import { Podcast } from "podcast";
 import getPodcastFromFeed from "podparse";
@@ -26,14 +26,14 @@ const createFeed = async (host: string) => {
 
     const episodesToConsider = [];
     for (const entry of stored_transcripts) {
-      const recordingPath = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${entry.id
+      const recordingPath = `${getDataDirPath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${entry.id
         }.mp3`;
 
       const recordingFile = Bun.file(recordingPath);
 
       if (await recordingFile.exists()) {
         const { size, length } = await getAudioMetadata(
-          `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${entry.id
+          `${getDataDirPath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${entry.id
           }.mp3`,
         );
         const episode: EpisodeMetadata = {
@@ -47,12 +47,12 @@ const createFeed = async (host: string) => {
       }
     }
 
-    createFolderIfNotExists(`${getBasePath()}/${FILE_FOLDER_NAME}`);
+    createFolderIfNotExists(`${getDataDirPath()}/${FILE_FOLDER_NAME}`);
     createFolderIfNotExists(
-      `${getBasePath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}`,
+      `${getDataDirPath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}`,
     );
 
-    const feedPath = `${getBasePath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}/feed.xml`;
+    const feedPath = `${getDataDirPath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}/feed.xml`;
     const feedMetadata = getFeedMetadata(host);
     const basePodcastData = new Podcast({ ...feedMetadata });
     const feedXml = basePodcastData.buildXml();

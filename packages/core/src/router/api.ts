@@ -1,6 +1,6 @@
 import ExtractTextQueue, { ExtractTextQueueJob } from "@queue/extractText";
 import GetAudioQueue, { GetAudioQueueJob } from "@queue/getAudio";
-import getBasePath from "@util/misc/getBasePath";
+import getDataDirPath from "@util/misc/getDataDirPath";
 import { FINISHED_RECORDINGS_RELATIVE_PATH } from "@util/misc/constants";
 import getServiceUrl from "@util/misc/getServiceUrl";
 import { unlink } from "node:fs/promises";
@@ -55,7 +55,7 @@ const apiRequestRouter = (app: Elysia) => {
 
         const episodes = [];
         for (const transcript of stored_transcripts) {
-          const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${transcript.id
+          const episodeLocation = `${getDataDirPath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${transcript.id
             }.mp3`;
           const episodeFile = Bun.file(episodeLocation);
           const episodeExists = await episodeFile?.exists();
@@ -71,7 +71,7 @@ const apiRequestRouter = (app: Elysia) => {
       }
     })
     .delete("/audio/:episodeId", async ({ params: { episodeId } }) => {
-      const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${episodeId}.mp3`;
+      const episodeLocation = `${getDataDirPath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${episodeId}.mp3`;
       await unlink(episodeLocation);
       return new Response();
     })
@@ -81,7 +81,7 @@ const apiRequestRouter = (app: Elysia) => {
 
       const episodes = [];
       for (const transcript of stored_transcripts) {
-        const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${transcript.id
+        const episodeLocation = `${getDataDirPath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${transcript.id
           }.mp3`;
         const episodeFile = Bun.file(episodeLocation);
         const episodeExists = await episodeFile?.exists();

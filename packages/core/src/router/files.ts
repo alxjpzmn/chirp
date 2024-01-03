@@ -3,7 +3,7 @@ import {
   FILE_FOLDER_NAME,
   FINISHED_RECORDINGS_RELATIVE_PATH,
 } from "@util/misc/constants";
-import getBasePath from "@util/misc/getBasePath";
+import getDataDirPath from "@util/misc/getDataDirPath";
 import createFeed from "@util/feedCreation/createFeed";
 import Elysia from "elysia";
 import getServiceUrl from "@util/misc/getServiceUrl";
@@ -16,7 +16,7 @@ const fileRequestRouter = (app: Elysia) =>
       await createFeed(host ?? getServiceUrl());
       return new Response(
         Bun.file(
-          `${getBasePath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}/feed.xml`,
+          `${getDataDirPath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}/feed.xml`,
         ),
         {
           headers: {
@@ -30,7 +30,7 @@ const fileRequestRouter = (app: Elysia) =>
     .get("/cover", () => {
       return new Response(
         Bun.file(
-          `${getBasePath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}/cover.jpg`,
+          `${getDataDirPath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}/cover.jpg`,
         ),
         {
           headers: {
@@ -44,7 +44,7 @@ const fileRequestRouter = (app: Elysia) =>
     .get("/episode/:episodeId", ({ params: { episodeId } }) => {
       return new Response(
         Bun.file(
-          `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${episodeId}.mp3`,
+          `${getDataDirPath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${episodeId}.mp3`,
         ),
         {
           headers: {

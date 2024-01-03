@@ -1,7 +1,7 @@
 import path from "path";
 
 const getBasePath = () => {
-  return path.resolve(Bun.env.DATA_DIR ?? ".");
+  return path.resolve(".");
 };
 
 export default getBasePath;

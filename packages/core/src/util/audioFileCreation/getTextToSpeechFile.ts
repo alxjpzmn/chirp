@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { rm } from "node:fs/promises";
 import createFolderIfNotExists from "@util/misc/createFolderIfNotExits";
-import getBasePath from "@util/misc/getBasePath";
+import getDataDirPath from "@util/misc/getDataDirPath";
 import {
   AUDIO_FOLDER_NAME,
   FILE_FOLDER_NAME,
@@ -22,7 +22,7 @@ const getTextToSpeechFile = async (id: number, text: string) => {
     const textBatches: string[] = chunk(text, 4000);
 
     const openai = new OpenAI();
-    const basePath = getBasePath();
+    const basePath = getDataDirPath();
     createFolderIfNotExists(`${basePath}/${FILE_FOLDER_NAME}`);
     createFolderIfNotExists(
       `${basePath}/${FILE_FOLDER_NAME}/${AUDIO_FOLDER_NAME}`,

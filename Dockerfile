@@ -23,12 +23,18 @@ FROM base AS prerelease
 COPY --from=install /temp/dev/node_modules node_modules
 COPY ./packages/core .
 
+FROM base AS web-client-builder
+WORKDIR /app
+COPY ./packages/web .
+RUN bun install
+RUN bun run build
 
 # copy production dependencies and source code into final image
 FROM base AS release
 ENV NODE_ENV=production
 ENV DATA_DIR=/data
 COPY --from=install /temp/prod/node_modules node_modules
+COPY --from=web-client-builder /app/dist ./dist
 COPY --from=prerelease /usr/src/app/src ./src
 COPY --from=prerelease /usr/src/app/index.ts .
 COPY --from=prerelease /usr/src/app/tsconfig.json .
