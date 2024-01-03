@@ -13,8 +13,6 @@ const fileRequestRouter = (app: Elysia) =>
     .get("/feed", async ({ headers }) => {
       const host = `${Bun.env.SSL === "true" ? "https://" : "http://"}${headers.host
         }`;
-      console.log(host);
-
       await createFeed(host ?? getServiceUrl());
       return new Response(
         Bun.file(

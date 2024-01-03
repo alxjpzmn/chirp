@@ -21,7 +21,7 @@ export const TranscriptList = ({ }) => {
         </Flex>
         <SubHeading>Get audio for new items</SubHeading>
         {transcripts?.map((transcript: any) => (
-          <Box mb={4} shadow="xs" p={4} rounded="md" key={transcript?.id}>
+          <Box mb={4} shadow="xs" rounded="md" key={transcript?.id}>
             <Text w="100%" fontSize="sm" fontWeight="semibold" noOfLines={2}>
               {transcript?.title}
             </Text>

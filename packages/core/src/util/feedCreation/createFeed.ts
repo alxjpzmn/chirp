@@ -73,7 +73,6 @@ const createFeed = async (host: string) => {
         };
       }),
     );
-    console.log(host);
 
     for (const episode of episodesToConsider) {
       feed.addItem({

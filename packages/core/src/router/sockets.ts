@@ -7,13 +7,13 @@ const socketRouter = (app: Elysia) =>
     .ws("/audio_queue", {
       async open(ws) {
         const queue = new Queue("get_audio", { connection: queueConnection });
-        const jobs = await queue.getJobs(["active", "wait"]);
+        // const jobs = await queue.getJobs(["active", "wait"]);
 
         const audio_events = new QueueEvents("get_audio", {
           connection: queueConnection,
         });
 
-        let audioQueue = [];
+        let audioQueue: any = [];
 
         audio_events.on("added", async ({ jobId }) => {
           const job = await Job.fromId(queue, jobId);
@@ -21,8 +21,7 @@ const socketRouter = (app: Elysia) =>
           ws.send(JSON.stringify({ audioQueue }));
         });
         audio_events.on("completed", async ({ jobId }) => {
-          const job = await Job.fromId(queue, jobId);
-          audioQueue = audioQueue.filter((item) => {
+          audioQueue = audioQueue.filter((item: any) => {
             return item.jobId.toString() !== jobId;
           });
           console.log(audioQueue);
@@ -42,7 +41,7 @@ const socketRouter = (app: Elysia) =>
           connection: queueConnection,
         });
 
-        let transcript_queue = [];
+        let transcript_queue: any = [];
 
         transcript_events.on("added", async ({ jobId }) => {
           const job = await Job.fromId(queue, jobId);
@@ -51,13 +50,11 @@ const socketRouter = (app: Elysia) =>
             data: job?.data.payload,
             status: "added",
           });
-          console.log(transcript_queue);
 
           ws.send(JSON.stringify({ transcript_queue }));
         });
         transcript_events.on("completed", async ({ jobId }) => {
-          // const job = await Job.fromId(queue, jobId);
-          transcript_queue = transcript_queue.filter((item) => {
+          transcript_queue = transcript_queue.filter((item: any) => {
             return item.jobId.toString() !== jobId;
           });
           ws.send(JSON.stringify({ transcript_queue }));

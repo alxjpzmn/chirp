@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Grid, GridItem, Box, Spacer } from "@chakra-ui/react";
+import { Grid, GridItem, Box, Spacer, Flex, Text } from "@chakra-ui/react";
 import { DashboardColumn } from "./components/DashboardColumn";
 import RSSDisplay from "./components/FeedDisplay";
 import DashboardSection from "./components/DashboardSection";
@@ -9,6 +9,7 @@ import { TranscriptList } from "./components/TranscriptList";
 import { EpisodeQueue } from "./components/EpisodeQeue";
 import { TranscriptQueue } from "./components/TranscriptQueue";
 import "./App.css";
+import SubHeading from "./components/SubHeading";
 
 function App() {
   useEffect(() => {
@@ -30,26 +31,28 @@ function App() {
       >
         <GridItem>
           <DashboardColumn heading="Add Content">
-            <DashboardSection>
-              <AddArticle />
-            </DashboardSection>
-            <Spacer h={8} />
-            <DashboardSection>
-              <TranscriptQueue />
-              <TranscriptList />
-            </DashboardSection>
+            <AddArticle />
+            <TranscriptQueue />
+            <TranscriptList />
           </DashboardColumn>
         </GridItem>
         <GridItem>
           <DashboardColumn heading="Listen">
-            <DashboardSection>
-              <RSSDisplay />
-            </DashboardSection>
+            <RSSDisplay />
             <Spacer />
-            <DashboardSection>
+
+            <Box w="100%">
+              <Flex
+                width="100%"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Text fontWeight={600}>Episodes</Text>
+              </Flex>
+              <SubHeading>Manage what shows up in your feed</SubHeading>
               <EpisodeQueue />
               <EpisodeList />
-            </DashboardSection>
+            </Box>
           </DashboardColumn>
         </GridItem>
       </Grid>
