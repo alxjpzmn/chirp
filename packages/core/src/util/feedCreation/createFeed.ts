@@ -1,5 +1,3 @@
-import { db } from "@db/init";
-import { transcripts } from "@db/schema";
 import {
   FEED_DATA_FOLDER_NAME,
   FILE_FOLDER_NAME,
@@ -11,6 +9,7 @@ import getBasePath from "@util/misc/getBasePath";
 import getFeedMetadata from "./getFeedMetadata";
 import { Podcast } from "podcast";
 import getPodcastFromFeed from "podparse";
+import db from "@db/init";
 
 interface EpisodeMetadata {
   title: string;
@@ -22,7 +21,8 @@ interface EpisodeMetadata {
 
 const createFeed = async (host: string) => {
   try {
-    const stored_transcripts = db.select().from(transcripts).all();
+    const transcriptQuery = db.query("SELECT * FROM transcripts;");
+    const stored_transcripts: any = transcriptQuery.all();
 
     const episodesToConsider = [];
     for (const entry of stored_transcripts) {

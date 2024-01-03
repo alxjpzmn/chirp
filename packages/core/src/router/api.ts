@@ -1,20 +1,16 @@
 import ExtractTextQueue, { ExtractTextQueueJob } from "@queue/extractText";
-import { db } from "@db/init";
-import { transcripts } from "@db/schema";
-import { eq } from "drizzle-orm";
 import GetAudioQueue, { GetAudioQueueJob } from "@queue/getAudio";
 import getBasePath from "@util/misc/getBasePath";
 import { FINISHED_RECORDINGS_RELATIVE_PATH } from "@util/misc/constants";
 import getServiceUrl from "@util/misc/getServiceUrl";
 import { unlink } from "node:fs/promises";
-import { Elysia, t } from "elysia";
+import { Elysia } from "elysia";
+import db from "@db/init";
 
 const apiRequestRouter = (app: Elysia) => {
   return app
     ?.get("/health", () => "API is up")
     .post("/article", ({ body }) => {
-      console.log(body);
-
       const { url } = JSON.parse(body);
       const queue = new ExtractTextQueue();
       const job: ExtractTextQueueJob = {
@@ -26,11 +22,14 @@ const apiRequestRouter = (app: Elysia) => {
     .post("/audio", ({ body }) => {
       try {
         const { id } = JSON.parse(body);
-        const transcript = db
-          .select()
-          .from(transcripts)
-          .where(eq(transcripts.id, id))
-          .all()[0];
+        const transcriptQuery = db.query(
+          "SELECT * FROM transcripts WHERE id = $id",
+        );
+
+        const transcript: any = transcriptQuery.get({
+          $id: id,
+        });
+
         if (transcript.content) {
           const text: string = Bun.env.MAX_ARTICLE_CHARS
             ? transcript.content.slice(0, parseInt(Bun.env.MAX_ARTICLE_CHARS))
@@ -51,7 +50,8 @@ const apiRequestRouter = (app: Elysia) => {
     })
     .get("/audio", async () => {
       try {
-        const stored_transcripts = db.select().from(transcripts).all();
+        const transcriptQuery = db.query("SELECT * FROM transcripts;");
+        const stored_transcripts: any = transcriptQuery.all();
 
         const episodes = [];
         for (const transcript of stored_transcripts) {
@@ -76,7 +76,9 @@ const apiRequestRouter = (app: Elysia) => {
       return new Response();
     })
     .get("/transcripts", async () => {
-      const stored_transcripts = db.select().from(transcripts).all();
+      const transcriptQuery = db.query("SELECT * FROM transcripts;");
+      const stored_transcripts: any = transcriptQuery.all();
+
       const episodes = [];
       for (const transcript of stored_transcripts) {
         const episodeLocation = `${getBasePath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${transcript.id
@@ -92,9 +94,11 @@ const apiRequestRouter = (app: Elysia) => {
     .delete(
       "/transcripts/:transcriptId",
       async ({ params: { transcriptId } }) => {
-        await db
-          .delete(transcripts)
-          .where(eq(transcripts.id, parseInt(transcriptId)));
+        const deletionQuery = db.query(
+          `delete from transcripts where id = $id`,
+        );
+        deletionQuery.run({ $id: transcriptId });
+
         return new Response();
       },
     )

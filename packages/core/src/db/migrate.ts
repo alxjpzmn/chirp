@@ -1,13 +1,14 @@
-import { migrate } from "drizzle-orm/bun-sqlite/migrator";
+import db from "./init";
 
-import { drizzle } from "drizzle-orm/bun-sqlite";
-import { Database } from "bun:sqlite";
-import getBasePath from "@util/misc/getBasePath";
+const transcriptMigrationQuery = db.query(
+  "CREATE TABLE IF NOT EXISTS transcripts (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, slug TEXT, url TEXT NOT NULL, content TEXT NOT NULL, created_at TEXT DEFAULT CURRENT_TIMESTAMP, updated_at TEXT DEFAULT CURRENT_TIMESTAMP, source_type TEXT NOT NULL DEFAULT 'article');",
+);
 
-const sqlite = new Database(`${getBasePath()}/chirp.db`);
-const db = drizzle(sqlite);
-console.log("running migration in folder: ", `${getBasePath()}/drizzle`);
+const migrationQueries = [transcriptMigrationQuery];
 
-migrate(db, {
-  migrationsFolder: `${getBasePath()}/drizzle`,
-});
+const runMigrationQueries = () => {
+  migrationQueries.forEach((query) => query.run());
+  return;
+};
+
+export default runMigrationQueries;

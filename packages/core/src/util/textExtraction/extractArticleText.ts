@@ -2,8 +2,7 @@ import { Readability, isProbablyReaderable } from "@mozilla/readability";
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
 import { normalizeWhiteSpaces } from "normalize-text";
-import { db } from "@db/init";
-import { transcripts } from "@db/schema";
+import db from "@db/init";
 
 const extractArticleText = async (url: string) => {
   try {
@@ -34,12 +33,15 @@ const extractArticleText = async (url: string) => {
     }
 
     const textContent = normalizeWhiteSpaces(article?.textContent);
-    await db.insert(transcripts).values({
-      url,
-      content: textContent,
-      slug: article?.excerpt,
-      title: article?.title,
-      source_type: "article",
+    const insert_transcripts_query = db.query(
+      "INSERT INTO transcripts (url, content, slug, title) VALUES ($url, $content, $slug, $title)",
+    );
+
+    insert_transcripts_query.run({
+      $url: url,
+      $content: textContent,
+      $slug: article?.excerpt,
+      $title: article?.title,
     });
   } catch (error) {
     console.error(error);

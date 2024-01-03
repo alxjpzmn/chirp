@@ -3,6 +3,7 @@ import { rm } from "node:fs/promises";
 import createFolderIfNotExists from "@util/misc/createFolderIfNotExits";
 import getBasePath from "@util/misc/getBasePath";
 import {
+  AUDIO_FOLDER_NAME,
   FILE_FOLDER_NAME,
   FINISHED_RECORDINGS_RELATIVE_PATH,
   TEMP_RECORDINGS_RELATIVE_PATH,
@@ -23,6 +24,9 @@ const getTextToSpeechFile = async (id: number, text: string) => {
     const openai = new OpenAI();
     const basePath = getBasePath();
     createFolderIfNotExists(`${basePath}/${FILE_FOLDER_NAME}`);
+    createFolderIfNotExists(
+      `${basePath}/${FILE_FOLDER_NAME}/${AUDIO_FOLDER_NAME}`,
+    );
     createFolderIfNotExists(`${basePath}/${TEMP_RECORDINGS_RELATIVE_PATH}`);
     createFolderIfNotExists(`${basePath}/${FINISHED_RECORDINGS_RELATIVE_PATH}`);
     createFolderIfNotExists(

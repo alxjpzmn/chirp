@@ -84,6 +84,8 @@ jspm_packages/
 *.db
 *.sqlite
 *.db-journal
+*.db-shm
+*.db-wal
 
 # Folders created by Chirp
 storage/

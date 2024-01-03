@@ -35,6 +35,6 @@ COPY --from=prerelease /usr/src/app/tsconfig.json .
 COPY --from=prerelease /usr/src/app/package.json .
 
 # run the app
-USER root
+USER bun
 EXPOSE 3000/tcp
-ENTRYPOINT ["sh", "-c", "bunx drizzle-kit generate:sqlite --schema ./src/db/schema.ts --out /data/drizzle && bun run ./src/db/migrate.ts && bun run index.ts"]
+ENTRYPOINT [ "bun", "run", "index.ts" ]
