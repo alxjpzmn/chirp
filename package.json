@@ -8,12 +8,16 @@
   ],
   "scripts": {
     "dev": "concurrently -n \"@chirp/core,@chirp/web\" -c \"blue,green\" \"cd packages/web && bun run dev\" \"cd packages/core && bun run dev\"",
-    "redis": "docker run --name redis -d --network host redis redis-server --save 60 1 --loglevel info"
+    "redis": "docker run --name redis -d --network host redis redis-server --save 60 1 --loglevel info",
+    "dockerize": "docker build --pull -t chirp ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "elysia": "^0.8.8"
   }
 }

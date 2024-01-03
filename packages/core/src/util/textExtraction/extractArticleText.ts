@@ -43,8 +43,8 @@ const extractArticleText = async (url: string) => {
       $slug: article?.excerpt,
       $title: article?.title,
     });
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
   }
 };
 

@@ -1,15 +1,14 @@
+import "./App.css";
 import { useEffect } from "react";
 import { Grid, GridItem, Box, Spacer, Flex, Text } from "@chakra-ui/react";
-import { DashboardColumn } from "./components/DashboardColumn";
-import RSSDisplay from "./components/FeedDisplay";
-import DashboardSection from "./components/DashboardSection";
-import { EpisodeList } from "./components/EpisodeList";
-import { AddArticle } from "./components/AddArticle";
-import { TranscriptList } from "./components/TranscriptList";
-import { EpisodeQueue } from "./components/EpisodeQeue";
-import { TranscriptQueue } from "./components/TranscriptQueue";
-import "./App.css";
-import SubHeading from "./components/SubHeading";
+import { DashboardColumn } from "@/components/DashboardColumn";
+import RSSDisplay from "@/components/FeedDisplay";
+import { EpisodeList } from "@/components/EpisodeList";
+import { AddArticle } from "@/components/AddArticle";
+import { TranscriptList } from "@/components/TranscriptList";
+import { EpisodeQueue } from "@/components/EpisodeQeue";
+import { TranscriptQueue } from "@/components/TranscriptQueue";
+import SubHeading from "@/primitives/SubHeading";
 
 function App() {
   useEffect(() => {

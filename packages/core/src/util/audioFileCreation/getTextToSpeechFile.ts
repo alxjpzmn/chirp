@@ -61,8 +61,8 @@ const getTextToSpeechFile = async (id: number, text: string) => {
           }),
       );
     await promisifiedFileCreation();
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
   }
 };
 

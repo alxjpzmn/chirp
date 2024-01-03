@@ -1,14 +1,14 @@
 import { Flex, Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
-import SubHeading from "./SubHeading";
 import { Trash, Waveform } from "@phosphor-icons/react";
 import useSWR from "swr";
-import { fetcher } from "../util/api";
+import SubHeading from "@/primitives/SubHeading";
+import { fetcher } from "@/util/api";
 
-export const TranscriptList = ({ }) => {
+export const TranscriptList = () => {
   const { data: transcripts, mutate } = useSWR("/api/transcripts", fetcher);
   const textColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
 
-  const deleteTranscript = async (transcriptId) => {
+  const deleteTranscript = async (transcriptId: string) => {
     await fetch(`/api/transcripts/${transcriptId}`, { method: "DELETE" });
     mutate();
   };

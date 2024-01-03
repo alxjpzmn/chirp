@@ -3,7 +3,7 @@ import { Queue, Worker } from "bullmq";
 import queueConnection from "@util/misc/queueConnection";
 
 export interface AudioInputData {
-  id: string;
+  id: number;
   text: string;
   title: string;
   slug: string;

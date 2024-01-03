@@ -6,11 +6,11 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
-import SubHeading from "./SubHeading";
+import SubHeading from "@/primitives/SubHeading";
 import { useForm } from "react-hook-form";
-import isHTTPUrl from "../util/isHttpUrl";
+import isHTTPUrl from "@/util/isHttpUrl";
 
-export const AddArticle = ({ }) => {
+export const AddArticle = () => {
   const {
     handleSubmit,
     register,

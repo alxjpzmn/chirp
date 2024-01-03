@@ -1,17 +1,16 @@
 import { Flex, Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
-import SubHeading from "./SubHeading";
 import { Trash } from "@phosphor-icons/react";
 import useSWR from "swr";
-import { fetcher } from "../util/api";
+import { fetcher } from "@/util/api";
 
-interface EpisodeListProps { }
+interface EpisodeListProps {}
 
-export const EpisodeList: React.FC<EpisodeListProps> = ({ }) => {
+export const EpisodeList: React.FC<EpisodeListProps> = ({}) => {
   const textColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
   const { data: episodes, mutate } = useSWR("/api/audio", fetcher);
 
-  const deleteEpisode = async (episodeId) => {
+  const deleteEpisode = async (episodeId: number) => {
     await fetch(`/api/audio/${episodeId}`, { method: "DELETE" });
     mutate();
   };

@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Rss } from "@phosphor-icons/react";
-import SubHeading from "./SubHeading";
+import SubHeading from "@/primitives/SubHeading";
 
 const podcastApps = [
   {

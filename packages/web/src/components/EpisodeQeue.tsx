@@ -1,7 +1,7 @@
 import useSWRSubscription from "swr/subscription";
+import type { SWRSubscriptionOptions } from "swr/subscription";
 import { useSWRConfig } from "swr";
 
-import type { SWRSubscriptionOptions } from "swr/subscription";
 import { useEffect } from "react";
 import { Box, Text, Flex, useColorModeValue, Progress } from "@chakra-ui/react";
 

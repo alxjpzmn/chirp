@@ -1,6 +1,7 @@
 {
   "name": "@chirp/core",
   "module": "index.ts",
+  "private": true,
   "type": "module",
   "devDependencies": {
     "@types/chunk-text": "^1.0.2",
@@ -10,8 +11,7 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "dev": "bun --watch index.ts",
-    "build": "bun build --target bun index.ts --external fluent-ffmpeg --external chunk-text --outdir ./out"
+    "dev": "bun --watch index.ts"
   },
   "dependencies": {
     "@mozilla/readability": "^0.4.4",

@@ -95,8 +95,8 @@ const createFeed = async (host: string) => {
     }
     const xml = feed.buildXml();
     await Bun.write(`${feedPath}`, xml);
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
   }
 };
 
