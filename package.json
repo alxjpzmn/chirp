@@ -1,14 +1,14 @@
 {
   "name": "@chirp/monorepo",
-  "version": "1.0.0",
+  "private": "true",
+  "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "core": "pnpm --filter @chirp/core --",
-    "web": "pnpm --filter @chirp/web --",
-    "dev": "concurrently -n \"@chirp/core,@chirp/web\" -c \"blue,green\" \"pnpm core dev\" \"pnpm web dev\"",
-    "redis": "docker run --name redis -d --network host redis redis-server --save 60 1 --loglevel info",
-    "migrate": "pnpm core run migrate"
+    "dev": "concurrently -n \"@chirp/core,@chirp/web\" -c \"blue,green\" \"cd packages/web && bun run dev\" \"cd packages/core && bun run dev\"",
+    "redis": "docker run --name redis -d --network host redis redis-server --save 60 1 --loglevel info"
   },
   "keywords": [],
   "author": "",
