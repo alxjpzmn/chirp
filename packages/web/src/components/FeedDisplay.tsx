@@ -6,9 +6,9 @@ import {
   Text,
   Wrap,
   WrapItem,
-  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Rss } from "@phosphor-icons/react";
 import SubHeading from "@/primitives/SubHeading";
 
@@ -78,19 +78,10 @@ const podcastApps = [
 ];
 
 const RSSDisplay: React.FC = () => {
-  const [feedUrl, setFeedUrl] = useState("");
+  const feedUrl = `${window.location}files/feed`;
+  console.log(feedUrl);
 
-  useEffect(() => {
-    (async () => {
-      const res = await fetch("/api/feed");
-      const data = await res.json();
-      if (data?.feedUrl) {
-        setFeedUrl(data?.feedUrl);
-      }
-    })();
-  }, []);
-
-  const { colorMode } = useColorMode();
+  const color = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
 
   return (
     <>
@@ -104,30 +95,20 @@ const RSSDisplay: React.FC = () => {
         {podcastApps.map((podcastApp) => (
           <WrapItem key={podcastApp.name}>
             <Button
+              as="a"
+              href={`${podcastApp.url}${window.location.host}/files/feed`}
+              variant="outline"
               size="sm"
               rightIcon={
                 <Icon
                   role="img"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
-                  color={
-                    colorMode === "light"
-                      ? podcastApp.color
-                      : "white" ?? "white"
-                  }
+                  color={podcastApp.color ?? color}
                 >
                   {podcastApp.rawIcon}
                 </Icon>
               }
-              variant="outline"
-              onClick={() => {
-                if (feedUrl) {
-                  window.location.href = `${podcastApp?.url}${feedUrl?.replace(
-                    /http(s)?(:)?(\/\/)?|(\/\/)/,
-                    "",
-                  )}`;
-                }
-              }}
             >
               {podcastApp.name}
             </Button>

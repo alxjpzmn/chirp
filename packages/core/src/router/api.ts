@@ -6,7 +6,6 @@ import {
   FINISHED_RECORDINGS_RELATIVE_PATH,
   TITLE_PLACEHOLDER,
 } from "@util/misc/constants";
-import getServiceUrl from "@util/misc/getServiceUrl";
 import { unlink } from "node:fs/promises";
 import { Elysia, t } from "elysia";
 import db from "@db/init";
@@ -143,12 +142,7 @@ const apiRequestRouter = (app: Elysia) => {
           transcriptId: t.String(),
         }),
       },
-    )
-    .get("/feed", () => {
-      return new Response(
-        JSON.stringify({ feedUrl: `${getServiceUrl()}/files/feed` }),
-      );
-    });
+    );
 };
 
 export default apiRequestRouter;

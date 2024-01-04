@@ -52,7 +52,13 @@ export const AddArticle = () => {
             </FormErrorMessage>
           )}
         </FormControl>
-        <Button mt={2} size="sm" isLoading={isSubmitting} type="submit">
+        <Button
+          variant="outline"
+          mt={2}
+          size="sm"
+          isLoading={isSubmitting}
+          type="submit"
+        >
           Add
         </Button>
       </form>
