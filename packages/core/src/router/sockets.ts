@@ -7,24 +7,47 @@ const socketRouter = (app: Elysia) =>
     .ws("/audio_queue", {
       async open(ws) {
         const queue = new Queue("get_audio", { connection: queueConnection });
-        // const jobs = await queue.getJobs(["active", "wait"]);
+
+        let audioQueue: any = [];
+
+        const jobs = await queue.getJobs([
+          "failed",
+          "delayed",
+          "active",
+          "wait",
+          "waiting-children",
+          "prioritized",
+          "paused",
+          "repeat",
+        ]);
+
+        for (const job of jobs) {
+          console.log(job);
+
+          audioQueue.push({
+            jobId: job.id,
+            data: job.data.payload ? job.data : job.data.payload,
+            status: await job.getState(),
+          });
+        }
+
+        console.log(audioQueue);
+
+        ws.send(JSON.stringify({ audioQueue }));
 
         const audio_events = new QueueEvents("get_audio", {
           connection: queueConnection,
         });
 
-        let audioQueue: any = [];
-
         audio_events.on("added", async ({ jobId }) => {
           const job = await Job.fromId(queue, jobId);
-          audioQueue.push({ jobId, data: job?.data.payload, status: "added" });
+          audioQueue.push({ jobId, data: job?.data, status: "added" });
           ws.send(JSON.stringify({ audioQueue }));
         });
         audio_events.on("completed", async ({ jobId }) => {
           audioQueue = audioQueue.filter((item: any) => {
             return item.jobId.toString() !== jobId;
           });
-          console.log(audioQueue);
 
           ws.send(JSON.stringify({ audioQueue }));
         });
@@ -41,23 +64,23 @@ const socketRouter = (app: Elysia) =>
           connection: queueConnection,
         });
 
-        let transcript_queue: any = [];
+        let transcriptQueue: any = [];
 
         transcript_events.on("added", async ({ jobId }) => {
           const job = await Job.fromId(queue, jobId);
-          transcript_queue.push({
+          transcriptQueue.push({
             jobId,
-            data: job?.data.payload,
+            data: job?.data,
             status: "added",
           });
 
-          ws.send(JSON.stringify({ transcript_queue }));
+          ws.send(JSON.stringify({ transcriptQueue }));
         });
         transcript_events.on("completed", async ({ jobId }) => {
-          transcript_queue = transcript_queue.filter((item: any) => {
+          transcriptQueue = transcriptQueue.filter((item: any) => {
             return item.jobId.toString() !== jobId;
           });
-          ws.send(JSON.stringify({ transcript_queue }));
+          ws.send(JSON.stringify({ transcriptQueue }));
         });
       },
     });

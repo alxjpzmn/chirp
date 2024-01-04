@@ -14,10 +14,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {},
   "devDependencies": {
     "concurrently": "^8.2.2"
-  },
-  "dependencies": {
-    "elysia": "^0.8.8"
   }
 }

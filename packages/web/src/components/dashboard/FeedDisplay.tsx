@@ -7,6 +7,8 @@ import {
   Wrap,
   WrapItem,
   useColorModeValue,
+  CardBody,
+  Card,
 } from "@chakra-ui/react";
 import React from "react";
 import { Rss } from "@phosphor-icons/react";
@@ -77,46 +79,45 @@ const podcastApps = [
   },
 ];
 
-const RSSDisplay: React.FC = () => {
-  const feedUrl = `${window.location}files/feed`;
-  console.log(feedUrl);
-
+const FeedDisplay: React.FC = () => {
   const color = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
 
   return (
-    <>
-      <Box w="100%">
-        <Flex width="100%" justifyContent="space-between" alignItems="center">
-          <Text fontWeight={600}>Feed</Text>
-        </Flex>
-        <SubHeading>Subscribe to your content</SubHeading>
-      </Box>
-      <Wrap w="100%" spacing={2}>
-        {podcastApps.map((podcastApp) => (
-          <WrapItem key={podcastApp.name}>
-            <Button
-              as="a"
-              href={`${podcastApp.url}${window.location.host}/files/feed`}
-              variant="outline"
-              size="sm"
-              rightIcon={
-                <Icon
-                  role="img"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  color={podcastApp.color ?? color}
-                >
-                  {podcastApp.rawIcon}
-                </Icon>
-              }
-            >
-              {podcastApp.name}
-            </Button>
-          </WrapItem>
-        ))}
-      </Wrap>
-    </>
+    <Card w="100%" variant="outline">
+      <CardBody>
+        <Box w="100%">
+          <Flex width="100%" justifyContent="space-between">
+            <Text fontWeight={600}>Feed</Text>
+          </Flex>
+          <SubHeading>Subscribe to your content</SubHeading>
+        </Box>
+        <Wrap w="100%" spacing={2}>
+          {podcastApps.map((podcastApp) => (
+            <WrapItem key={podcastApp.name}>
+              <Button
+                as="a"
+                href={`${podcastApp.url}${window.location.host}/files/feed`}
+                variant="outline"
+                size="sm"
+                rightIcon={
+                  <Icon
+                    role="img"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    color={podcastApp.color ?? color}
+                  >
+                    {podcastApp.rawIcon}
+                  </Icon>
+                }
+              >
+                {podcastApp.name}
+              </Button>
+            </WrapItem>
+          ))}
+        </Wrap>
+      </CardBody>
+    </Card>
   );
 };
 
-export default RSSDisplay;
+export default FeedDisplay;

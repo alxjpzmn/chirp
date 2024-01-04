@@ -1,5 +1,5 @@
 import ExtractTextQueue, { ExtractTextQueueJob } from "@queue/extractText";
-import GetAudioQueue, { GetAudioQueueJob } from "@queue/getAudio";
+import GetAudioQueue, { AudioInputData } from "@queue/getAudio";
 import getDataDirPath from "@util/misc/getDataDirPath";
 import {
   DESCRIPTION_PLACEHOLDER,
@@ -9,6 +9,8 @@ import {
 import { unlink } from "node:fs/promises";
 import { Elysia, t } from "elysia";
 import db from "@db/init";
+import { Queue } from "bullmq";
+import queueConnection from "@util/misc/queueConnection";
 
 const apiRequestRouter = (app: Elysia) => {
   return app
@@ -51,9 +53,7 @@ const apiRequestRouter = (app: Elysia) => {
             const title: string = transcript.title ?? TITLE_PLACEHOLDER;
             const slug: string = transcript.slug ?? DESCRIPTION_PLACEHOLDER;
             const queue = new GetAudioQueue();
-            const job: GetAudioQueueJob = {
-              payload: { id, text, title, slug },
-            };
+            const job: AudioInputData = { id, text, title, slug };
             queue.add(job);
           }
           return new Response();
@@ -106,20 +106,35 @@ const apiRequestRouter = (app: Elysia) => {
     )
     .get("/transcripts", async () => {
       try {
-        const transcriptQuery = db.query("SELECT * FROM transcripts;");
+        const transcriptQuery = db.query(
+          "SELECT * FROM transcripts ORDER BY created_at desc;",
+        );
         const stored_transcripts: any = transcriptQuery.all();
-
-        const episodes = [];
+        const queue = new Queue("get_audio", { connection: queueConnection });
+        const jobs = await queue.getJobs([
+          "failed",
+          "delayed",
+          "active",
+          "wait",
+          "waiting-children",
+          "prioritized",
+          "paused",
+          "repeat",
+        ]);
+        const transcripts = [];
         for (const transcript of stored_transcripts) {
           const episodeLocation = `${getDataDirPath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${transcript.id
             }.mp3`;
           const episodeFile = Bun.file(episodeLocation);
+          const inQueue = jobs
+            .map((job) => job.data.id)
+            .some((id) => id === transcript.id);
           const episodeExists = await episodeFile?.exists();
-          if (!episodeExists) {
-            episodes.push(transcript);
+          if (!episodeExists && !inQueue) {
+            transcripts.push(transcript);
           }
         }
-        return new Response(JSON.stringify(episodes));
+        return new Response(JSON.stringify(transcripts));
       } catch (e) {
         console.error(e);
       }

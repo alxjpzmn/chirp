@@ -13,7 +13,6 @@ const testRedisConnection = () => {
     },
   });
   console.log("Redis connection established.");
-
   testQueue.close();
 };
 

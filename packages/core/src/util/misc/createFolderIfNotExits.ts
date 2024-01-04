@@ -3,7 +3,7 @@ const createFolderIfNotExists = (folderPath: string) => {
   if (!existsSync(folderPath)) {
     mkdirSync(folderPath);
   } else {
-    console.log(
+    console.info(
       `Folder '${folderPath}' already exists, skipping folder creation.`,
     );
   }

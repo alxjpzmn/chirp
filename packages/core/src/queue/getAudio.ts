@@ -9,10 +9,6 @@ export interface AudioInputData {
   slug: string;
 }
 
-export interface GetAudioQueueJob {
-  payload: AudioInputData;
-}
-
 class GetAudioQueue {
   name: string;
   queue: Queue;
@@ -23,12 +19,12 @@ class GetAudioQueue {
     this.events = new Worker(
       this.name,
       async (job) => {
-        await getTextToSpeechFile(job.data.payload.id, job.data.payload.text);
+        await getTextToSpeechFile(job.data.id, job.data.text);
       },
       { connection: queueConnection },
     );
   }
-  public add(data: GetAudioQueueJob) {
+  public add(data: AudioInputData) {
     this.queue.add(this.name, data);
   }
 }

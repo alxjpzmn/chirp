@@ -13,12 +13,10 @@ export const DashboardColumn: React.FC<DashboardColumnProps> = ({
   return (
     <Box w="full">
       <Box w="100%" shadow="none">
-        <Heading size="md" mb={4}>
+        <Heading size="lg" mb={4} fontWeight="900">
           {heading}
         </Heading>
-        <VStack py={0} spacing={4}>
-          {children}
-        </VStack>
+        <VStack spacing={12}>{children}</VStack>
       </Box>
     </Box>
   );

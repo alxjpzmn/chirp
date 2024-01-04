@@ -5,5 +5,5 @@ try {
   startup();
   router();
 } catch (e) {
-  console.log(e);
+  console.error(e);
 }
