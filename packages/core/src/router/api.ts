@@ -88,15 +88,23 @@ const apiRequestRouter = (app: Elysia) => {
         console.error(e);
       }
     })
-    .delete("/audio/:episodeId", async ({ params: { episodeId } }) => {
-      try {
-        const episodeLocation = `${getDataDirPath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${episodeId}.mp3`;
-        await unlink(episodeLocation);
-        return new Response();
-      } catch (e) {
-        console.error(e);
-      }
-    })
+    .delete(
+      "/audio/:episodeId",
+      async ({ params: { episodeId } }) => {
+        try {
+          const episodeLocation = `${getDataDirPath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${episodeId}.mp3`;
+          await unlink(episodeLocation);
+          return new Response();
+        } catch (e) {
+          console.error(e);
+        }
+      },
+      {
+        params: t.Object({
+          episodeId: t.String(),
+        }),
+      },
+    )
     .get("/transcripts", async () => {
       try {
         const transcriptQuery = db.query("SELECT * FROM transcripts;");
@@ -129,6 +137,11 @@ const apiRequestRouter = (app: Elysia) => {
         } catch (e) {
           console.error(e);
         }
+      },
+      {
+        params: t.Object({
+          transcriptId: t.String(),
+        }),
       },
     )
     .get("/feed", () => {

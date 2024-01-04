@@ -1,3 +1,5 @@
+// https://github.com/elysiajs/elysia/issues/354
+// @ts-nocheck
 import { Elysia } from "elysia";
 import fileRequestRouter from "@router/files";
 import apiRequestRouter from "@router/api";

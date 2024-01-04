@@ -1,24 +1,18 @@
 import getBasePath from "@util/misc/getBasePath";
-import Elysia from "elysia";
+import Elysia, { t } from "elysia";
 
 const staticRouter = (app: Elysia) =>
   app
-    .get("/", () => {
-      const fileToServe = Bun.file(`${getBasePath()}/dist/index.html`);
-
-      return new Response(fileToServe, {
-        headers: {
-          "Content-Type": "text/html; charset=utf-8",
-        },
-      });
-    })
-    .get("/:asset", ({ params: { asset } }) => {
-      const fileToServe = Bun.file(`${getBasePath()}/dist/assets/${asset}`);
-      return new Response(fileToServe, {
-        headers: {
-          "Content-Type": fileToServe.type,
-        },
-      });
-    });
+    .get("/", () => Bun.file(`${getBasePath()}/dist/index.html`))
+    .get(
+      "/:asset",
+      ({ params: { asset } }) =>
+        Bun.file(`${getBasePath()}/dist/assets/${asset}`),
+      {
+        params: t.Object({
+          asset: t.String(),
+        }),
+      },
+    );
 
 export default staticRouter;

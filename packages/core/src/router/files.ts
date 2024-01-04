@@ -5,7 +5,7 @@ import {
 } from "@util/misc/constants";
 import getDataDirPath from "@util/misc/getDataDirPath";
 import createFeed from "@util/feedCreation/createFeed";
-import Elysia from "elysia";
+import Elysia, { t } from "elysia";
 import getServiceUrl from "@util/misc/getServiceUrl";
 
 const fileRequestRouter = (app: Elysia) =>
@@ -21,39 +21,35 @@ const fileRequestRouter = (app: Elysia) =>
         {
           headers: {
             "Content-Type": "application/xml",
-            "Accept-Ranges": "none",
-            "X-Content-Type-Options": "nosniff",
           },
         },
       );
     })
-    .get("/cover", () => {
-      return new Response(
-        Bun.file(
-          `${getDataDirPath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}/cover.jpg`,
-        ),
-        {
-          headers: {
-            "Content-Type": "image/jpeg",
-            "Accept-Ranges": "none",
-            "X-Content-Type-Options": "nosniff",
+    .get("/cover", () =>
+      Bun.file(
+        `${getDataDirPath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}/cover.jpg`,
+      ),
+    )
+    .get(
+      "/episode/:episodeId",
+      ({ params: { episodeId } }) => {
+        return new Response(
+          Bun.file(
+            `${getDataDirPath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${episodeId}.mp3`,
+          ),
+          {
+            headers: {
+              "Content-Type": "audio/mpeg",
+              "Accept-Ranges": "bytes",
+            },
           },
-        },
-      );
-    })
-    .get("/episode/:episodeId", ({ params: { episodeId } }) => {
-      return new Response(
-        Bun.file(
-          `${getDataDirPath()}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${episodeId}.mp3`,
-        ),
-        {
-          headers: {
-            "Content-Type": "audio/mpeg",
-            "Accept-Ranges": "bytes",
-            "X-Content-Type-Options": "nosniff",
-          },
-        },
-      );
-    });
+        );
+      },
+      {
+        params: t.Object({
+          episodeId: t.String(),
+        }),
+      },
+    );
 
 export default fileRequestRouter;
