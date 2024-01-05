@@ -1,16 +1,16 @@
 import ExtractTextQueue, { ExtractTextQueueJob } from "@queue/extractText";
 import GetAudioQueue, { AudioInputData } from "@queue/getAudio";
 import getDataDirPath from "@util/misc/getDataDirPath";
-import {
-  DESCRIPTION_PLACEHOLDER,
-  FINISHED_RECORDINGS_RELATIVE_PATH,
-  TITLE_PLACEHOLDER,
-} from "@util/misc/constants";
+import { FINISHED_RECORDINGS_RELATIVE_PATH } from "@util/misc/constants";
 import { unlink } from "node:fs/promises";
 import { Elysia, t } from "elysia";
 import db from "@db/init";
 import { Queue } from "bullmq";
 import queueConnection from "@util/misc/queueConnection";
+import {
+  EPISODE_TITLE_PLACEHOLDER,
+  EPISODE_DESCRIPTION_PLACEHOLDER,
+} from "@chirp/shared/constants";
 
 const apiRequestRouter = (app: Elysia) => {
   return app
@@ -50,8 +50,9 @@ const apiRequestRouter = (app: Elysia) => {
             const text: string = Bun.env.MAX_ARTICLE_CHARS
               ? transcript.content.slice(0, parseInt(Bun.env.MAX_ARTICLE_CHARS))
               : transcript.content;
-            const title: string = transcript.title ?? TITLE_PLACEHOLDER;
-            const slug: string = transcript.slug ?? DESCRIPTION_PLACEHOLDER;
+            const title: string = transcript.title ?? EPISODE_TITLE_PLACEHOLDER;
+            const slug: string =
+              transcript.slug ?? EPISODE_DESCRIPTION_PLACEHOLDER;
             const queue = new GetAudioQueue();
             const job: AudioInputData = { id, text, title, slug };
             queue.add(job);
@@ -155,6 +156,26 @@ const apiRequestRouter = (app: Elysia) => {
       {
         params: t.Object({
           transcriptId: t.String(),
+        }),
+      },
+    )
+    .delete(
+      "/jobs/:jobId",
+      async ({ params: { jobId } }) => {
+        try {
+          console.log("deleting", jobId);
+
+          const queue = new Queue("get_audio", { connection: queueConnection });
+          const job = await queue.getJob(jobId);
+          await job?.remove();
+          return new Response();
+        } catch (e) {
+          console.error(e);
+        }
+      },
+      {
+        params: t.Object({
+          jobId: t.String(),
         }),
       },
     );

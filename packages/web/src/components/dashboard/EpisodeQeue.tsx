@@ -11,8 +11,15 @@ import {
   Card,
   CardBody,
   VStack,
+  CardFooter,
+  Button,
 } from "@chakra-ui/react";
-import { TITLE_PLACEHOLDER } from "@chirp/shared/constants";
+import {
+  EPISODE_DESCRIPTION_PLACEHOLDER,
+  EPISODE_TITLE_PLACEHOLDER,
+} from "@chirp/shared/constants";
+import { JobState } from "@chirp/shared/types";
+import { Trash } from "@phosphor-icons/react";
 
 export const EpisodeQueue = () => {
   const { mutate } = useSWRConfig();
@@ -46,7 +53,7 @@ export const EpisodeQueue = () => {
         >
           <CardBody>
             <Text w="100%" fontSize="sm" fontWeight="semibold" noOfLines={2}>
-              {item.data?.title || TITLE_PLACEHOLDER}
+              {item.data?.title || EPISODE_TITLE_PLACEHOLDER}
             </Text>
             <Flex mb={2}>
               <Text fontSize="xs" textColor={textColor}>
@@ -61,10 +68,33 @@ export const EpisodeQueue = () => {
               wordBreak="break-word"
               mb={4}
             >
-              {item.data?.slug}
+              {item.data?.slug || EPISODE_DESCRIPTION_PLACEHOLDER}
             </Text>
-            <Progress size="xs" isIndeterminate />
+            {item.status === JobState.Added && (
+              <Progress size="xs" isIndeterminate borderRadius={2} />
+            )}
+            {item.status === JobState.Failed && (
+              <Text fontSize="xs" color="red" fontFamily="monospace">
+                Error: {item.errorMessage}
+              </Text>
+            )}
           </CardBody>
+
+          <CardFooter>
+            <Button
+              variant="link"
+              size="xs"
+              gap={2}
+              color="gray"
+              onClick={async () => {
+                await fetch(`/api/jobs/${item.jobId}`, {
+                  method: "DELETE",
+                });
+              }}
+            >
+              <Trash size={16} weight="bold" /> Delete Job
+            </Button>
+          </CardFooter>
         </Card>
       ))}
     </VStack>

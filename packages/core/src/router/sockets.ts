@@ -1,6 +1,7 @@
 import { Job, QueueEvents, Queue } from "bullmq";
 import queueConnection from "@util/misc/queueConnection";
 import Elysia from "elysia";
+import { JobState, jobStates } from "@chirp/shared/types";
 
 const socketRouter = (app: Elysia) =>
   app
@@ -9,29 +10,22 @@ const socketRouter = (app: Elysia) =>
         const queue = new Queue("get_audio", { connection: queueConnection });
 
         let audioQueue: any = [];
+        const states = jobStates.filter(
+          (jobState) => jobState !== JobState.Completed,
+        );
 
-        const jobs = await queue.getJobs([
-          "failed",
-          "delayed",
-          "active",
-          "wait",
-          "waiting-children",
-          "prioritized",
-          "paused",
-          "repeat",
-        ]);
+        const incompleteJobs = await queue.getJobs(
+          jobStates.filter((jobState) => jobState !== JobState.Completed),
+        );
 
-        for (const job of jobs) {
-          console.log(job);
-
+        for (const job of incompleteJobs) {
           audioQueue.push({
             jobId: job.id,
             data: job.data.payload ? job.data : job.data.payload,
             status: await job.getState(),
+            errorMessage: job.failedReason,
           });
         }
-
-        console.log(audioQueue);
 
         ws.send(JSON.stringify({ audioQueue }));
 
@@ -39,12 +33,12 @@ const socketRouter = (app: Elysia) =>
           connection: queueConnection,
         });
 
-        audio_events.on("added", async ({ jobId }) => {
+        audio_events.on(JobState.Added, async ({ jobId }) => {
           const job = await Job.fromId(queue, jobId);
           audioQueue.push({ jobId, data: job?.data, status: "added" });
           ws.send(JSON.stringify({ audioQueue }));
         });
-        audio_events.on("completed", async ({ jobId }) => {
+        audio_events.on(JobState.Completed, async ({ jobId }) => {
           audioQueue = audioQueue.filter((item: any) => {
             return item.jobId.toString() !== jobId;
           });

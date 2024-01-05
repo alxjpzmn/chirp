@@ -27,11 +27,12 @@ export const TranscriptQueue = () => {
   }, [(data as any)?.transcriptQueue]);
 
   const textColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
+  console.log(data?.transcriptQueue);
 
   return (
     <VStack gap={4} w="100%">
       {(data as any)?.transcriptQueue?.map((item: any) => (
-        <Card variant="outline" w="full" key={item?.id}>
+        <Card variant="outline" w="full" key={item?.jobId}>
           <CardBody>
             <Text
               w="100%"
@@ -41,7 +42,7 @@ export const TranscriptQueue = () => {
               wordBreak="break-word"
               mb={4}
             >
-              Extracting text for {item.data.url}
+              Extracting text for {item.data.payload.url}
             </Text>
             <Progress size="xs" isIndeterminate />
           </CardBody>

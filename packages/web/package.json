@@ -1,6 +1,5 @@
 {
   "name": "@chirp/web",
-  "private": true,
   "version": "0.1.0",
   "type": "module",
   "scripts": {
@@ -9,6 +8,7 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
+    "@chirp/shared": "workspace:*",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@phosphor-icons/react": "^2.0.15",

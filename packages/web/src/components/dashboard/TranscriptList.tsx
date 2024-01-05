@@ -2,7 +2,6 @@ import {
   Flex,
   Text,
   Button,
-  Box,
   useColorModeValue,
   Card,
   CardBody,
@@ -11,8 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { Trash, Waveform } from "@phosphor-icons/react";
 import useSWR from "swr";
-import SubHeading from "@/primitives/SubHeading";
 import { fetcher } from "@/util/api";
+import {
+  TRANSCRIPT_DESCRIPTION_PLACEHOLDER,
+  TRANSCRIPT_TITLE_PLACEHOLDER,
+} from "@chirp/shared/constants";
 
 export const TranscriptList = () => {
   const { data: transcripts, mutate } = useSWR("/api/transcripts", fetcher);
@@ -29,7 +31,7 @@ export const TranscriptList = () => {
         <Card key={transcript?.id} variant="outline" w="100%">
           <CardBody>
             <Text w="100%" fontSize="sm" fontWeight="semibold" noOfLines={2}>
-              {transcript?.title || "Untitled Transcript"}
+              {transcript?.title || TRANSCRIPT_TITLE_PLACEHOLDER}
             </Text>
             <Flex mb={2}>
               <Text fontSize="xs" textColor={textColor}>
@@ -44,7 +46,7 @@ export const TranscriptList = () => {
               wordBreak="break-word"
               mb={4}
             >
-              {transcript?.slug || "No description"}
+              {transcript?.slug || TRANSCRIPT_DESCRIPTION_PLACEHOLDER}
             </Text>
           </CardBody>
           <CardFooter

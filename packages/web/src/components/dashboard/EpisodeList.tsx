@@ -13,6 +13,10 @@ import React from "react";
 import { Trash } from "@phosphor-icons/react";
 import useSWR, { useSWRConfig } from "swr";
 import { fetcher } from "@/util/api";
+import {
+  EPISODE_DESCRIPTION_PLACEHOLDER,
+  EPISODE_TITLE_PLACEHOLDER,
+} from "@chirp/shared/constants";
 
 interface EpisodeListProps { }
 
@@ -33,7 +37,7 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({ }) => {
         <Card variant="outline" key={episode?.id} w="100%">
           <CardBody>
             <Text w="100%" fontSize="sm" fontWeight="semibold" noOfLines={2}>
-              {episode?.title}
+              {episode?.title || EPISODE_TITLE_PLACEHOLDER}
             </Text>
             <Flex mb={2}>
               <Text fontSize="xs" textColor={textColor}>
@@ -48,7 +52,7 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({ }) => {
               wordBreak="break-word"
               mb={4}
             >
-              {episode?.slug}
+              {episode?.slug || EPISODE_DESCRIPTION_PLACEHOLDER}
             </Text>
             <Box width="100%">
               <audio

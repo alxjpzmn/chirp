@@ -21,7 +21,9 @@ class GetAudioQueue {
       async (job) => {
         await getTextToSpeechFile(job.data.id, job.data.text);
       },
-      { connection: queueConnection },
+      // For not violating OpenAI's rate limits:
+      // https://platform.openai.com/docs/guides/rate-limits/usage-tiers
+      { connection: queueConnection, limiter: { max: 1, duration: 15 } },
     );
   }
   public add(data: AudioInputData) {
