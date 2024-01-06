@@ -45,6 +45,7 @@ const extractArticleText = async (url: string) => {
     });
   } catch (e) {
     console.error(e);
+    throw new Error(`${e}`);
   }
 };
 

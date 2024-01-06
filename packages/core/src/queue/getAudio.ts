@@ -1,13 +1,7 @@
 import getTextToSpeechFile from "@util/audioFileCreation/getTextToSpeechFile";
 import { Queue, Worker } from "bullmq";
 import queueConnection from "@util/misc/queueConnection";
-
-export interface AudioInputData {
-  id: number;
-  text: string;
-  title: string;
-  slug: string;
-}
+import { AudioJobData } from "@chirp/shared/types";
 
 class GetAudioQueue {
   name: string;
@@ -25,11 +19,11 @@ class GetAudioQueue {
       // https://platform.openai.com/docs/guides/rate-limits/usage-tiers
       {
         connection: queueConnection,
-        // limiter: { max: 3, duration: 60000 },
+        limiter: { max: 3, duration: 60000 },
       },
     );
   }
-  public add(data: AudioInputData) {
+  public add(data: AudioJobData) {
     this.queue.add(this.name, data);
   }
 }

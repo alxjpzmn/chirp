@@ -3,7 +3,7 @@ export enum JobState {
   Failed = "failed",
   Delayed = "delayed",
   Active = "active",
-  Wait = "wait",
+  Wait = "waiting",
   WaitingChildren = "waiting-children",
   Prioritized = "prioritized",
   Paused = "paused",
@@ -23,3 +23,31 @@ export const jobStates: JobState[] = [
   JobState.Repeat,
   JobState.Completed,
 ];
+
+export interface AudioJobData {
+  id: number;
+  text: string;
+  title: string;
+  slug: string;
+}
+
+export interface AudioEventMessage {
+  jobId: string;
+  data: AudioJobData;
+  status: JobState;
+  errorMessage?: string;
+}
+
+export interface ExtractTextJobData {
+  id: number;
+  text: string;
+  title: string;
+  slug: string;
+}
+
+export interface TranscriptEventMessage {
+  jobId: string;
+  data: ExtractTextJobData;
+  status: JobState;
+  errorMessage?: string;
+}

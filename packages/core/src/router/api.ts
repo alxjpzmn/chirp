@@ -160,21 +160,24 @@ const apiRequestRouter = (app: Elysia) => {
       },
     )
     .delete(
-      "/jobs/:jobId",
-      async ({ params: { jobId } }) => {
+      "/jobs/:queueName/:jobId",
+      async ({ params: { queueName, jobId } }) => {
         try {
-          console.log("deleting", jobId);
-
-          const queue = new Queue("get_audio", { connection: queueConnection });
-          const job = await queue.getJob(jobId);
-          await job?.remove();
-          return new Response();
+          if (queueName === "get_audio" || queueName === "extract_text") {
+            const queue = new Queue(queueName, { connection: queueConnection });
+            const job = await queue.getJob(jobId);
+            await job?.remove();
+            return new Response();
+          } else {
+            throw new Error("Queue does not exist");
+          }
         } catch (e) {
           console.error(e);
         }
       },
       {
         params: t.Object({
+          queueName: t.String(),
           jobId: t.String(),
         }),
       },

@@ -51,7 +51,6 @@ const createFeed = async (host: string) => {
       }
     }
 
-    createFolderIfNotExists(`${getDataDirPath()}/${FILE_FOLDER_NAME}`);
     createFolderIfNotExists(
       `${getDataDirPath()}/${FILE_FOLDER_NAME}/${FEED_DATA_FOLDER_NAME}`,
     );

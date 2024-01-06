@@ -8,7 +8,7 @@ const migrationQueries = [transcriptMigrationQuery];
 
 const runMigrationQueries = () => {
   migrationQueries.forEach((query) => query.run());
-  console.log("Migrations successfully applied.");
+  console.log("Migrations applied");
   return;
 };
 

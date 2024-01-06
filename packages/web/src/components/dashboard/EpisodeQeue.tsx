@@ -1,11 +1,8 @@
-import useSWRSubscription from "swr/subscription";
-import type { SWRSubscriptionOptions } from "swr/subscription";
 import { useSWRConfig } from "swr";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Text,
-  Flex,
   useColorModeValue,
   Progress,
   Card,
@@ -19,14 +16,17 @@ import {
   EPISODE_TITLE_PLACEHOLDER,
 } from "@chirp/shared/constants";
 import { JobState } from "@chirp/shared/types";
-import { Trash } from "@phosphor-icons/react";
+import { Trash, Clock } from "@phosphor-icons/react";
+import useSWRSubscription from "swr/subscription";
 
 export const EpisodeQueue = () => {
   const { mutate } = useSWRConfig();
 
+  const [audioMessages, setAudioMessages] = useState([]);
+
   const { data } = useSWRSubscription(
     `ws://${window.location.host}/sockets/audio_queue`,
-    (key, { next }: SWRSubscriptionOptions<number, Error>) => {
+    (key, { next }) => {
       const socket = new WebSocket(key);
       socket.addEventListener("message", (event) => {
         return next(null, JSON.parse(event.data));
@@ -36,14 +36,30 @@ export const EpisodeQueue = () => {
   );
 
   useEffect(() => {
-    mutate("/api/transcripts");
-    mutate("/api/audio");
-  }, [(data as any)?.audioMessages]);
+    if (data) {
+      if (data.type === "initial") {
+        setAudioMessages(data.payload);
+      } else {
+        data.payload.status === JobState.Added && mutate("/api/transcripts");
+        data.payload.status === JobState.Completed && mutate("/api/audio");
+
+        data.payload.status === JobState.Completed
+          ? setAudioMessages((prev) =>
+            prev.filter((message) => message.jobId !== data.payload.jobId),
+          )
+          : setAudioMessages((prev) =>
+            prev
+              .filter((message) => message.jobId !== data.payload.jobId)
+              .concat(data.payload),
+          );
+      }
+    }
+  }, [data, setAudioMessages]);
 
   const textColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
   return (
     <VStack gap={4} w="100%">
-      {(data as any)?.audioMessages?.map((item: any) => (
+      {audioMessages?.map((item: any) => (
         <Card
           shadow="xs"
           rounded="md"
@@ -68,33 +84,54 @@ export const EpisodeQueue = () => {
             >
               {item.data?.slug || EPISODE_DESCRIPTION_PLACEHOLDER}
             </Text>
-            {item.status === JobState.Added && (
+            {item.status === JobState.Active && (
               <Progress size="xs" isIndeterminate borderRadius={2} />
             )}
             {item.status === JobState.Failed && (
               <Text fontSize="xs" color="red" fontFamily="monospace">
-                Error: {item.errorMessage}
+                {item.errorMessage}
               </Text>
             )}
+            {(item.status === JobState.Added ||
+              item.status === JobState.Wait) && (
+                <Text
+                  fontSize="xs"
+                  color="orange"
+                  fontFamily="monospace"
+                  display="flex"
+                  justifyItems="center"
+                  gap={2}
+                >
+                  <Clock size={16} weight="bold" /> Waiting
+                </Text>
+              )}
           </CardBody>
 
-          {item.status === JobState.Failed && (
-            <CardFooter>
-              <Button
-                variant="link"
-                size="xs"
-                gap={2}
-                color="gray"
-                onClick={async () => {
-                  await fetch(`/api/jobs/${item.jobId}`, {
-                    method: "DELETE",
-                  });
-                }}
-              >
-                <Trash size={16} weight="bold" /> Delete Job
-              </Button>
-            </CardFooter>
-          )}
+          {(item.status === JobState.Failed ||
+            item.status === JobState.Added ||
+            item.status === JobState.Wait) && (
+              <CardFooter>
+                <Button
+                  variant="link"
+                  size="xs"
+                  gap={2}
+                  color="gray"
+                  onClick={async () => {
+                    await fetch(`/api/jobs/get_audio/${item.jobId}`, {
+                      method: "DELETE",
+                    });
+                    mutate("/api/transcripts");
+                    setAudioMessages(
+                      audioMessages.filter(
+                        (audioMessage) => audioMessage.jobId !== item.jobId,
+                      ),
+                    );
+                  }}
+                >
+                  <Trash size={16} weight="bold" /> Delete
+                </Button>
+              </CardFooter>
+            )}
         </Card>
       ))}
     </VStack>

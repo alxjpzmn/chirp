@@ -1,7 +1,12 @@
 import { Job, QueueEvents, Queue, JobType } from "bullmq";
 import queueConnection from "@util/misc/queueConnection";
 import Elysia from "elysia";
-import { JobState, jobStates } from "@chirp/shared/types";
+import {
+  AudioEventMessage,
+  JobState,
+  TranscriptEventMessage,
+  jobStates,
+} from "@chirp/shared/types";
 
 const socketRouter = (app: Elysia) =>
   app
@@ -15,34 +20,41 @@ const socketRouter = (app: Elysia) =>
           ) as JobType[],
         );
 
-        let audioMessages: any = [];
+        let initialAudioMessages: AudioEventMessage[] = [];
 
         for (const job of incompleteJobs) {
-          audioMessages.push({
-            jobId: job.id,
+          initialAudioMessages.push({
+            jobId: job.id as string,
             data: job.data,
-            status: await job.getState(),
+            status: (await job.getState()) as JobState,
             errorMessage: job.failedReason,
           });
         }
 
-        ws.send(JSON.stringify({ audioMessages }));
+        ws.send({ payload: initialAudioMessages, type: "initial" });
 
         const audio_events = new QueueEvents("get_audio", {
           connection: queueConnection,
         });
 
-        audio_events.on(JobState.Added, async ({ jobId }) => {
-          const job = await Job.fromId(queue, jobId);
-          audioMessages.push({ jobId, data: job?.data, status: "added" });
-          ws.send(JSON.stringify({ audioMessages }));
-        });
-        audio_events.on(JobState.Completed, async ({ jobId }) => {
-          audioMessages = audioMessages.filter((item: any) => {
-            return item.jobId.toString() !== jobId;
+        for (const jobState of jobStates.filter(
+          (state) => state !== JobState.Repeat,
+        )) {
+          audio_events.on(jobState, async ({ jobId }) => {
+            const job = await Job.fromId(queue, jobId);
+            ws.send(
+              JSON.stringify({
+                payload: {
+                  jobId,
+                  data: job?.data,
+                  status: jobState,
+                  errorMessage: job?.failedReason,
+                },
+                type: "update",
+              }),
+            );
           });
-          ws.send(JSON.stringify({ audioMessages }));
-        });
+        }
       },
     })
     .ws("/transcripts_queue", {
@@ -50,29 +62,45 @@ const socketRouter = (app: Elysia) =>
         const queue = new Queue("extract_text", {
           connection: queueConnection,
         });
+        let initialTranscriptMessages: TranscriptEventMessage[] = [];
+
+        const incompleteJobs = await queue.getJobs(
+          jobStates.filter(
+            (jobState) => jobState !== JobState.Completed,
+          ) as JobType[],
+        );
+        for (const job of incompleteJobs) {
+          initialTranscriptMessages.push({
+            jobId: job.id as string,
+            data: job.data,
+            status: (await job.getState()) as JobState,
+            errorMessage: job.failedReason,
+          });
+        }
+        ws.send({ payload: initialTranscriptMessages, type: "initial" });
 
         const transcript_events = new QueueEvents("extract_text", {
           connection: queueConnection,
         });
 
-        let transcriptQueue: any = [];
-
-        transcript_events.on("added", async ({ jobId }) => {
-          const job = await Job.fromId(queue, jobId);
-          transcriptQueue.push({
-            jobId,
-            data: job?.data,
-            status: "added",
+        for (const jobState of jobStates.filter(
+          (state) => state !== JobState.Repeat,
+        )) {
+          transcript_events.on(jobState, async ({ jobId }) => {
+            const job = await Job.fromId(queue, jobId);
+            ws.send(
+              JSON.stringify({
+                payload: {
+                  jobId,
+                  data: job?.data,
+                  status: jobState,
+                  errorMessage: job?.failedReason,
+                },
+                type: "update",
+              }),
+            );
           });
-
-          ws.send(JSON.stringify({ transcriptQueue }));
-        });
-        transcript_events.on("completed", async ({ jobId }) => {
-          transcriptQueue = transcriptQueue.filter((item: any) => {
-            return item.jobId.toString() !== jobId;
-          });
-          ws.send(JSON.stringify({ transcriptQueue }));
-        });
+        }
       },
     });
 
