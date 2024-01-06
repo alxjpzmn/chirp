@@ -19,7 +19,7 @@ const getTextToSpeechFile = async (id: number, text: string) => {
     ffmpeg.setFfprobePath(pathToFfprobe.path);
     const command = ffmpeg();
 
-    const textBatches: string[] = chunk(text, 4000);
+    const textFragments: string[] = chunk(text, 4000);
 
     const openai = new OpenAI();
     const basePath = getDataDirPath();
@@ -33,12 +33,13 @@ const getTextToSpeechFile = async (id: number, text: string) => {
       `${basePath}/${TEMP_RECORDINGS_RELATIVE_PATH}/${id}`,
     );
     let i = 0;
-    for (const batch of textBatches) {
+    for (const textFragment of textFragments) {
       const speechFilePath = `${basePath}/${TEMP_RECORDINGS_RELATIVE_PATH}/${id}/tts-${i}.mp3`;
+
       const mp3 = await openai.audio.speech.create({
         model: "tts-1-hd",
         voice: "alloy",
-        input: batch,
+        input: textFragment,
       });
       const buffer = Buffer.from(await mp3.arrayBuffer());
       await Bun.write(speechFilePath, buffer);

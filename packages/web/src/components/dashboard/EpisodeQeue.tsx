@@ -38,12 +38,12 @@ export const EpisodeQueue = () => {
   useEffect(() => {
     mutate("/api/transcripts");
     mutate("/api/audio");
-  }, [(data as any)?.audioQueue]);
+  }, [(data as any)?.audioMessages]);
 
   const textColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
   return (
     <VStack gap={4} w="100%">
-      {(data as any)?.audioQueue?.map((item: any) => (
+      {(data as any)?.audioMessages?.map((item: any) => (
         <Card
           shadow="xs"
           rounded="md"
@@ -55,11 +55,9 @@ export const EpisodeQueue = () => {
             <Text w="100%" fontSize="sm" fontWeight="semibold" noOfLines={2}>
               {item.data?.title || EPISODE_TITLE_PLACEHOLDER}
             </Text>
-            <Flex mb={2}>
-              <Text fontSize="xs" textColor={textColor}>
-                {item.data?.url}
-              </Text>
-            </Flex>
+            <Text fontSize="xs" textColor={textColor} w="100%">
+              {item.data?.url}
+            </Text>
             <Text
               w="100%"
               fontSize="sm"
@@ -80,21 +78,23 @@ export const EpisodeQueue = () => {
             )}
           </CardBody>
 
-          <CardFooter>
-            <Button
-              variant="link"
-              size="xs"
-              gap={2}
-              color="gray"
-              onClick={async () => {
-                await fetch(`/api/jobs/${item.jobId}`, {
-                  method: "DELETE",
-                });
-              }}
-            >
-              <Trash size={16} weight="bold" /> Delete Job
-            </Button>
-          </CardFooter>
+          {item.status === JobState.Failed && (
+            <CardFooter>
+              <Button
+                variant="link"
+                size="xs"
+                gap={2}
+                color="gray"
+                onClick={async () => {
+                  await fetch(`/api/jobs/${item.jobId}`, {
+                    method: "DELETE",
+                  });
+                }}
+              >
+                <Trash size={16} weight="bold" /> Delete Job
+              </Button>
+            </CardFooter>
+          )}
         </Card>
       ))}
     </VStack>

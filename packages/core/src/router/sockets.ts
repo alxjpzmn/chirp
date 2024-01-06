@@ -1,4 +1,4 @@
-import { Job, QueueEvents, Queue } from "bullmq";
+import { Job, QueueEvents, Queue, JobType } from "bullmq";
 import queueConnection from "@util/misc/queueConnection";
 import Elysia from "elysia";
 import { JobState, jobStates } from "@chirp/shared/types";
@@ -9,25 +9,24 @@ const socketRouter = (app: Elysia) =>
       async open(ws) {
         const queue = new Queue("get_audio", { connection: queueConnection });
 
-        let audioQueue: any = [];
-        const states = jobStates.filter(
-          (jobState) => jobState !== JobState.Completed,
+        const incompleteJobs = await queue.getJobs(
+          jobStates.filter(
+            (jobState) => jobState !== JobState.Completed,
+          ) as JobType[],
         );
 
-        const incompleteJobs = await queue.getJobs(
-          jobStates.filter((jobState) => jobState !== JobState.Completed),
-        );
+        let audioMessages: any = [];
 
         for (const job of incompleteJobs) {
-          audioQueue.push({
+          audioMessages.push({
             jobId: job.id,
-            data: job.data.payload ? job.data : job.data.payload,
+            data: job.data,
             status: await job.getState(),
             errorMessage: job.failedReason,
           });
         }
 
-        ws.send(JSON.stringify({ audioQueue }));
+        ws.send(JSON.stringify({ audioMessages }));
 
         const audio_events = new QueueEvents("get_audio", {
           connection: queueConnection,
@@ -35,15 +34,14 @@ const socketRouter = (app: Elysia) =>
 
         audio_events.on(JobState.Added, async ({ jobId }) => {
           const job = await Job.fromId(queue, jobId);
-          audioQueue.push({ jobId, data: job?.data, status: "added" });
-          ws.send(JSON.stringify({ audioQueue }));
+          audioMessages.push({ jobId, data: job?.data, status: "added" });
+          ws.send(JSON.stringify({ audioMessages }));
         });
         audio_events.on(JobState.Completed, async ({ jobId }) => {
-          audioQueue = audioQueue.filter((item: any) => {
+          audioMessages = audioMessages.filter((item: any) => {
             return item.jobId.toString() !== jobId;
           });
-
-          ws.send(JSON.stringify({ audioQueue }));
+          ws.send(JSON.stringify({ audioMessages }));
         });
       },
     })
@@ -52,7 +50,6 @@ const socketRouter = (app: Elysia) =>
         const queue = new Queue("extract_text", {
           connection: queueConnection,
         });
-        // const jobs = await queue.getJobs(["active", "wait"]);
 
         const transcript_events = new QueueEvents("extract_text", {
           connection: queueConnection,

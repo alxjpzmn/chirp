@@ -23,7 +23,10 @@ class GetAudioQueue {
       },
       // For not violating OpenAI's rate limits:
       // https://platform.openai.com/docs/guides/rate-limits/usage-tiers
-      { connection: queueConnection, limiter: { max: 1, duration: 15 } },
+      {
+        connection: queueConnection,
+        // limiter: { max: 3, duration: 60000 },
+      },
     );
   }
   public add(data: AudioInputData) {

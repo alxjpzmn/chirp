@@ -10,6 +10,10 @@ import getFeedMetadata from "./getFeedMetadata";
 import { Podcast } from "podcast";
 import getPodcastFromFeed from "podparse";
 import db from "@db/init";
+import {
+  EPISODE_TITLE_PLACEHOLDER,
+  EPISODE_DESCRIPTION_PLACEHOLDER,
+} from "@chirp/shared/constants";
 
 interface EpisodeMetadata {
   title: string;
@@ -37,8 +41,8 @@ const createFeed = async (host: string) => {
           }.mp3`,
         );
         const episode: EpisodeMetadata = {
-          title: entry.title ?? "Untitled",
-          slug: entry.slug ?? "No description for this episode",
+          title: entry.title ?? EPISODE_TITLE_PLACEHOLDER,
+          slug: entry.slug ?? EPISODE_DESCRIPTION_PLACEHOLDER,
           id: entry.id,
           length: length ?? 0,
           size,
