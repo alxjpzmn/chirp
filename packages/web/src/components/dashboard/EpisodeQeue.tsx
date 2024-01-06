@@ -1,6 +1,6 @@
 import { useSWRConfig } from "swr";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Text,
   useColorModeValue,
@@ -18,11 +18,13 @@ import {
 import { JobState } from "@chirp/shared/types";
 import { Trash, Clock } from "@phosphor-icons/react";
 import useSWRSubscription from "swr/subscription";
+import { UserContentCountContext } from "@/pages/Dashboard";
 
 export const EpisodeQueue = () => {
   const { mutate } = useSWRConfig();
 
   const [audioMessages, setAudioMessages] = useState([]);
+  const { contentCount, setContentCount } = useContext(UserContentCountContext);
 
   const { data } = useSWRSubscription(
     `ws://${window.location.host}/sockets/audio_queue`,
@@ -38,7 +40,11 @@ export const EpisodeQueue = () => {
   useEffect(() => {
     if (data) {
       if (data.type === "initial") {
-        setAudioMessages(data.payload);
+        setAudioMessages(
+          data.payload.sort((a, b) => {
+            return Number(b.jobId) - Number(a.jobId);
+          }),
+        );
       } else {
         data.payload.status === JobState.Added && mutate("/api/transcripts");
         data.payload.status === JobState.Completed && mutate("/api/audio");
@@ -50,11 +56,19 @@ export const EpisodeQueue = () => {
           : setAudioMessages((prev) =>
             prev
               .filter((message) => message.jobId !== data.payload.jobId)
-              .concat(data.payload),
+              .concat(data.payload)
+              .toReversed(),
           );
       }
     }
   }, [data, setAudioMessages]);
+
+  useEffect(() => {
+    setContentCount({
+      ...contentCount,
+      episodeQueue: audioMessages.length,
+    });
+  }, [audioMessages]);
 
   const textColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
   return (

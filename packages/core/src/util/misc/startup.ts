@@ -12,7 +12,7 @@ const testRedisConnection = () => {
       maxRetriesPerRequest: 1,
     },
   });
-  console.log("Redis connection established.");
+  console.info("Redis connection established.");
   testQueue.close();
 };
 
@@ -25,7 +25,7 @@ const checkForFFMPEG = () => {
   const ffmpegInstance = ffmpeg();
 
   if (!!ffmpegInstance) {
-    console.log("FFmpeg loaded");
+    console.info("FFmpeg loaded");
   } else {
     throw new Error("FFmpeg couldn't be initialized.");
   }
@@ -34,7 +34,7 @@ const checkForFFMPEG = () => {
 const checkForOpenAi = () => {
   const openai = new OpenAI();
   if (!!openai) {
-    console.log("OpenAI SDK initialized.");
+    console.info("OpenAI SDK initialized.");
   } else {
     throw new Error("OpenAI SDK couldn't be initialized.");
   }

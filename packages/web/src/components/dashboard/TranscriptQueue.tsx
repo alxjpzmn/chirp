@@ -1,6 +1,6 @@
 import useSWRSubscription from "swr/subscription";
 import { useSWRConfig } from "swr";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Card,
   Progress,
@@ -13,10 +13,13 @@ import {
 } from "@chakra-ui/react";
 import { JobState } from "@chirp/shared/types";
 import { Trash, Clock } from "@phosphor-icons/react";
+import { UserContentCountContext } from "@/pages/Dashboard";
 
 export const TranscriptQueue = () => {
   const { mutate } = useSWRConfig();
   const [transcriptMessages, setTranscriptMessages] = useState([]);
+
+  const { contentCount, setContentCount } = useContext(UserContentCountContext);
 
   const { data } = useSWRSubscription(
     `ws://${window.location.host}/sockets/transcripts_queue`,
@@ -32,7 +35,11 @@ export const TranscriptQueue = () => {
   useEffect(() => {
     if (data) {
       if (data.type === "initial") {
-        setTranscriptMessages(data.payload);
+        setTranscriptMessages(
+          data.payload.sort((a, b) => {
+            return Number(b.jobId) - Number(a.jobId);
+          }),
+        );
       } else {
         data.payload.status === JobState.Completed &&
           mutate("/api/transcripts");
@@ -43,13 +50,21 @@ export const TranscriptQueue = () => {
           : setTranscriptMessages((prev) =>
             prev
               .filter((message) => message.jobId !== data.payload.jobId)
-              .concat(data.payload),
+              .concat(data.payload)
+              .toReversed(),
           );
       }
     }
   }, [data, setTranscriptMessages]);
 
   const textColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700");
+
+  useEffect(() => {
+    setContentCount({
+      ...contentCount,
+      transcriptQueue: transcriptMessages.length,
+    });
+  }, [transcriptMessages]);
 
   return (
     <VStack gap={4} w="100%">
