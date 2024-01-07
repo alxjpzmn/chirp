@@ -7,13 +7,13 @@ WORKDIR /usr/src/app
 # this will cache them and speed up future builds
 FROM base AS install
 RUN mkdir -p /temp/dev
-COPY ./packages/core/bun.lockb /temp/dev/
+COPY ./bun.lockb /temp/dev/
 COPY ./packages/core/package.json /temp/dev/
 RUN cd /temp/dev && bun install
 
 # install with --production (exclude devDependencies)
 RUN mkdir -p /temp/prod
-COPY ./packages/core/bun.lockb /temp/prod/
+COPY ./bun.lockb /temp/prod/
 COPY ./packages/core/package.json /temp/prod/
 RUN cd /temp/prod && bun install
 

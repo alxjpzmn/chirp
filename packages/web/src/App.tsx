@@ -2,22 +2,26 @@ import "./App.css";
 import { useEffect } from "react";
 import { Dashboard } from "./pages/Dashboard";
 import { Login } from "./pages/Login";
-import { Switch, Route } from "wouter";
-import { Box, useToast, useColorModeValue } from "@chakra-ui/react";
+import { Switch, Route, useLocation } from "wouter";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 
 function App() {
-  const toast = useToast();
+  const [_location, setLocation] = useLocation();
 
   useEffect(() => {
     (async () => {
-      const res = await fetch("/api/health");
-      if (res.status !== 200) {
-        toast({
-          title: "Server error",
-          description: "Couldn't connect to backend.",
-          status: "error",
-          isClosable: true,
-        });
+      const res = await fetch("/api/config");
+      const resData = await res.json();
+      const serverAuthConfigured = resData?.serverAuthConfigured;
+      if (!serverAuthConfigured) {
+        setLocation("/dashboard");
+      } else {
+        const res = await fetch("/api/auth");
+        if (res.status === 200) {
+          setLocation("/dashboard");
+        } else {
+          setLocation("/login");
+        }
       }
     })();
   }, []);
