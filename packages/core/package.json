@@ -21,6 +21,7 @@
     "@types/jsdom": "^21.1.5",
     "async": "^3.2.5",
     "bullmq": "^4.13.2",
+    "cheerio": "^1.0.0-rc.12",
     "chunk-text": "^2.0.1",
     "dompurify": "^3.0.6",
     "elysia": "^0.8.6",

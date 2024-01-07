@@ -17,9 +17,12 @@ const extractArticleText = async (url: string) => {
     const DOMWindow = new JSDOM("").window;
     const DOMPurify = createDOMPurify(DOMWindow);
     const rawhtml = await rawResponse.text();
+
     const sanitizedHtml = DOMPurify.sanitize(rawhtml);
+
     const interpretedHtml = new JSDOM(sanitizedHtml);
     const document = interpretedHtml?.window?.document;
+
     const reader = new Readability(document);
 
     if (!isProbablyReaderable(document)) {
@@ -33,6 +36,16 @@ const extractArticleText = async (url: string) => {
     }
 
     const textContent = normalizeWhiteSpaces(article?.textContent);
+
+    let title;
+    if (article?.title) {
+      title = article?.title;
+    } else {
+      const cheerio = require("cheerio");
+      const $ = cheerio.load(sanitizedHtml);
+      title = $("h1").text();
+    }
+
     const insert_transcripts_query = db.query(
       "INSERT INTO transcripts (url, content, slug, title) VALUES ($url, $content, $slug, $title)",
     );
@@ -41,7 +54,7 @@ const extractArticleText = async (url: string) => {
       $url: url,
       $content: textContent,
       $slug: article?.excerpt,
-      $title: article?.title,
+      $title: title,
     });
   } catch (e) {
     console.error(e);
