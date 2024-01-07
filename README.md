@@ -1,8 +1,10 @@
 # Chirp
 
-Convert the text content of URLs into a podcast feed, each article being an episode, read by [OpenAI's TTS API](https://platform.openai.com/docs/guides/text-to-speech).
+Convert the text content of URLs into a podcast feed, each article becoming an episode read by [OpenAI's TTS API](https://platform.openai.com/docs/guides/text-to-speech).
 
-Chirp is in early beta state – it works, but expect quite a few rough edges.
+🚧 Chirp is in early beta state – it works, but expect quite a few rough edges.
+
+<img alt="Screenshot of Chirp" src="./.github/images/chirp-screenshot.png" style="width: 90%" />
 
 ## Getting Started
 
@@ -16,15 +18,14 @@ Chirp is in early beta state – it works, but expect quite a few rough edges.
 
 5. You can configure the following environment variables (if you run Chirp via `bun run dev`, just create a `.env` file inside the `packages/core` directory and add them there):
 
-   | Name              | Effect                                                       |
-   | ----------------- | ------------------------------------------------------------ |
-   | OPENAI_API_KEY    | Mandatory, authenticates you against OpenAI's TTS API        |
+   | Name              | Effect                                                                                                                                                                                   |
+   | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | OPENAI_API_KEY    | Mandatory, authenticates you against OpenAI's TTS API                                                                                                                                    |
    | PASSWORD          | Optional, adds basic authentication using JWTs for your instance. Beware that your feed itself and its data are always public since podcast players don't play well with authentication. |
-   | MAX_ARTICLE_CHARS | Optional, this is useful for development if you want to test things and don't want to rack up bills with OpenAI. I use 200 in development. |
-   | SSL               | Optional, in case you have Chirp served via HTTPS you will need to set this to true or the feed won't work. Defaults to false. |
-   | PORT              | Optional, defaults to 3000.                                  |
-   | DATA_DIR          | Optional, defaults to the directory Chirp is being executed from. |
-   |                   |                                                              |
+   | MAX_ARTICLE_CHARS | Optional, this is useful for development if you want to test things and don't want to rack up bills with OpenAI. I use 200 in development.                                               |
+   | SSL               | Optional, in case you have Chirp served via HTTPS you will need to set this to true or the feed won't work. Defaults to false.                                                           |
+   | PORT              | Optional, defaults to 3000.                                                                                                                                                              |
+   | DATA_DIR          | Optional, defaults to the directory Chirp is being executed from.                                                                                                                        |
 
 ## Developer Guide
 
