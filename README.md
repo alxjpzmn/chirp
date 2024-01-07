@@ -4,7 +4,7 @@ Convert the text content of URLs into a podcast feed, each article becoming an e
 
 🚧 Chirp is in early beta state – it works, but expect quite a few rough edges.
 
-<img alt="Screenshot of Chirp" src="./.github/images/chirp-screenshot.png" style="width: 90%" />
+<img alt="Screenshot of Chirp" src="./.github/chirp-screenshot.png" style="width: 90%" />
 
 ## Getting Started
 
