@@ -1,0 +1,29 @@
+html,
+body {
+  scrollbar-gutter: both-edges;
+  padding: 0;
+  margin: 0;
+  min-height: -webkit-fill-available;
+  height: -webkit-fill-available;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Chrome/Safari and web-kit-based browsers
+   (if it doesn't work, try maybe also on the parent/wrapper)
+*/
+::-webkit-file-upload-button {
+  cursor: pointer;
+}
+
+/* IE11 (if it doesn't work, try maybe also on the parent/wrapper) */
+input[type="file"] {
+  cursor: pointer;
+}
