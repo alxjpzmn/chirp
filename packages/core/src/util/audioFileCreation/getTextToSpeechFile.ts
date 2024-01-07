@@ -21,8 +21,6 @@ const getTextToSpeechFile = async (id: number, text: string) => {
 
     // OpenAI's character limit per request
     const textFragments: string[] = chunk(text, 4096);
-
-    const openai = new OpenAI();
     const basePath = getDataDirPath();
     createFolderIfNotExists(
       `${basePath}/${TEMP_RECORDINGS_RELATIVE_PATH}/${id}`,
@@ -30,6 +28,7 @@ const getTextToSpeechFile = async (id: number, text: string) => {
 
     let i = 0;
     for (const textFragment of textFragments) {
+      const openai = new OpenAI();
       const speechFilePath = `${basePath}/${TEMP_RECORDINGS_RELATIVE_PATH}/${id}/tts-${i}.mp3`;
       const mp3 = await retry(
         { times: 3, interval: 20000 },
@@ -42,14 +41,21 @@ const getTextToSpeechFile = async (id: number, text: string) => {
       );
 
       const buffer = Buffer.from(await mp3.arrayBuffer());
-      command.input(speechFilePath);
+
       await Bun.write(speechFilePath, buffer);
+      command.mergeAdd(speechFilePath);
+      i++;
     }
+
+    createFolderIfNotExists(`${basePath}/${FINISHED_RECORDINGS_RELATIVE_PATH}`);
     const outputFile = `${basePath}/${FINISHED_RECORDINGS_RELATIVE_PATH}/${id}.mp3`;
     const promisifiedFileCreation = () =>
       new Promise((resolve, reject) =>
         command
-          .mergeToFile(outputFile)
+          .mergeToFile(
+            outputFile,
+            `${basePath}/${TEMP_RECORDINGS_RELATIVE_PATH}/${id}`,
+          )
           .on("end", async () => {
             await rm(`${basePath}/${TEMP_RECORDINGS_RELATIVE_PATH}/${id}`, {
               recursive: true,

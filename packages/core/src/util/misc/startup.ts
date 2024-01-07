@@ -25,7 +25,7 @@ const checkForFFMPEG = () => {
   const ffmpegInstance = ffmpeg();
 
   if (!!ffmpegInstance) {
-    console.info("FFmpeg loaded");
+    console.info("FFmpeg loaded.");
   } else {
     throw new Error("FFmpeg couldn't be initialized.");
   }

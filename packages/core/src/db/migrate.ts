@@ -12,7 +12,7 @@ const migrationQueries = [transcriptMigrationQuery, configMigrationQuery];
 
 const runMigrationQueries = () => {
   migrationQueries.forEach((query) => query.run());
-  console.info("Migrations applied");
+  console.info("Migrations applied.");
   return;
 };
 
