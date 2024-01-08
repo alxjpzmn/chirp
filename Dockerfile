@@ -11,7 +11,7 @@ RUN bun build ./index.ts --target node --external fluent-ffmpeg --external chunk
 WORKDIR /app/packages/web
 RUN bun run build
 
-FROM base AS release
+FROM --platform=$BUILDPLATFORM base AS release
 ENV NODE_ENV=production
 ENV DATA_DIR=/data
 

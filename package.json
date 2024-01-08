@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "concurrently -n \"@chirp/core,@chirp/web\" -c \"blue,green\" \"cd packages/core && bun run dev\" \"cd packages/web && bun run dev\"",
     "redis": "docker run --name redis -d --network host redis redis-server --save 60 1 --loglevel info",
-    "dockerize": "docker build --pull -t chirp ."
+    "dockerize": "docker buildx build --platform linux/amd64,linux/arm64 -t chirp ."
   },
   "keywords": [],
   "author": "",
