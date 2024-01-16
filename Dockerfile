@@ -1,3 +1,7 @@
+LABEL org.opencontainers.image.source=https://github.com/alxjpzmn
+LABEL org.opencontainers.image.description "Convert the text content of URLs into a podcast feed, each article becoming an episode read by OpenAI's TTS API"
+LABEL org.opencontainers.image.licenses=MIT
+
 FROM --platform=$BUILDPLATFORM oven/bun:latest as base
 
 FROM --platform=$BUILDPLATFORM base AS builder
