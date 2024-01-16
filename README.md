@@ -45,5 +45,5 @@ Chirp depends on a ton of open source projects. Here's an (incomprehensive) list
 - Elysia: effortless APIs with Bun
 - Chakra UI: It's ridiculously simple to hack together a decent looking web app with it
 - Phosphor Icons: some of the most beautiful and versatile icons around
-- Readability: extracts the text content of an URL, this is what Firefox uses for its reader view and the folks at the Mozille foundation were kind enough to pack it into a Node lib, too
+- Readability: extracts the text content of an URL, this is what Firefox uses for its reader view and the folks at the Mozilla foundation were kind enough to pack it into a Node lib, too
 - FFMPEG: https://www.youtube.com/watch?v=9kaIXkImCAM
