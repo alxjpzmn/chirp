@@ -1,6 +1,3 @@
-LABEL org.opencontainers.image.source=https://github.com/alxjpzmn/chirp
-LABEL org.opencontainers.image.description "Convert the text content of URLs into a podcast feed, each article becoming an episode read by OpenAI's TTS API"
-LABEL org.opencontainers.image.licenses=MIT
 
 FROM --platform=$BUILDPLATFORM oven/bun:latest as base
 
@@ -15,6 +12,10 @@ WORKDIR /app/packages/web
 RUN bun run build
 
 FROM --platform=$BUILDPLATFORM base AS release
+LABEL org.opencontainers.image.source=https://github.com/alxjpzmn/chirp
+LABEL org.opencontainers.image.description "Convert the text content of URLs into a podcast feed, each article becoming an episode read by OpenAI's TTS API"
+LABEL org.opencontainers.image.licenses=MIT
+
 ENV NODE_ENV=production
 ENV DATA_DIR=/data
 RUN apt-get update && apt-get install -y redis-server
