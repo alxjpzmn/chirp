@@ -1,5 +1,4 @@
-FROM oven/bun:1 as base
-WORKDIR /app
+FROM --platform=$BUILDPLATFORM oven/bun:latest as base
 
 FROM --platform=$BUILDPLATFORM base AS builder
 WORKDIR /app
