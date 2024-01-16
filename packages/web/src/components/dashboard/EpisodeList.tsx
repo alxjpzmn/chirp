@@ -69,7 +69,7 @@ export const EpisodeList = () => {
                 <audio
                   controls
                   style={{ width: "100%" }}
-                  src={`/files/episode/${episode?.id}`}
+                  src={`/files/episode/${episode?.id}.mp3`}
                 />
               </Box>
             </CardBody>

@@ -17,7 +17,7 @@ import SubHeading from "@/primitives/SubHeading";
 const podcastApps = [
   {
     name: "Direct Link",
-    url: "http://",
+    url: `${window.location.protocol}//`,
     color: "",
     rawIcon: <Rss size={24} weight="bold" />,
   },

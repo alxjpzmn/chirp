@@ -1,5 +1,6 @@
 import db from "@db/init";
 import runMigrationQueries from "@db/migrate";
+import ffmpegInstance from "@util/audioFileCreation/initFfmpeg";
 import queueConnection from "@util/misc/queueConnection";
 import { ConnectionOptions, Queue } from "bullmq";
 import OpenAI from "openai";
@@ -17,14 +18,9 @@ const testRedisConnection = () => {
 };
 
 const checkForFFMPEG = () => {
-  const pathToFfmpeg = require("ffmpeg-static");
-  const pathToFfprobe = require("ffprobe-static");
-  const ffmpeg = require("fluent-ffmpeg");
-  ffmpeg.setFfmpegPath(pathToFfmpeg);
-  ffmpeg.setFfprobePath(pathToFfprobe.path);
-  const ffmpegInstance = ffmpeg();
+  const ffmpeg = ffmpegInstance() as any;
 
-  if (!!ffmpegInstance) {
+  if (!!ffmpeg) {
     console.info("FFmpeg loaded.");
   } else {
     throw new Error("FFmpeg couldn't be initialized.");

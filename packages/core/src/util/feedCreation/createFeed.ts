@@ -19,6 +19,7 @@ interface EpisodeMetadata {
   title: string;
   slug: string;
   id: number;
+  pubDate: Date;
   length: number;
   size: number;
 }
@@ -43,6 +44,7 @@ const createFeed = async (host: string) => {
         const episode: EpisodeMetadata = {
           title: entry.title ?? EPISODE_TITLE_PLACEHOLDER,
           slug: entry.slug ?? EPISODE_DESCRIPTION_PLACEHOLDER,
+          pubDate: entry.updated_at,
           id: entry.id,
           length: length ?? 0,
           size,
@@ -68,7 +70,6 @@ const createFeed = async (host: string) => {
         return {
           ...episode,
           itunesDuration: episode.duration,
-          date: episode.pubDate,
           enclosure: {
             ...episode.enclosure,
             size: episode.enclosure.length,
@@ -83,7 +84,7 @@ const createFeed = async (host: string) => {
         description: episode.slug,
         url: host,
         enclosure: {
-          url: `${host}/files/episode/${episode.id}`,
+          url: `${host}/files/episode/${episode.id}.mp3`,
           type: "audio/mpeg",
           size: episode.size,
         },
@@ -91,7 +92,7 @@ const createFeed = async (host: string) => {
         itunesTitle: episode.title,
         itunesSummary: episode.slug,
         author: "Chirp",
-        date: new Date(),
+        date: episode.pubDate,
         itunesDuration: episode.length,
         guid: `${episode.id}`,
       });

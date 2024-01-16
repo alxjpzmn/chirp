@@ -27,7 +27,8 @@ export const EpisodeQueue = () => {
   const { contentCount, setContentCount } = useContext(UserContentCountContext);
 
   const { data } = useSWRSubscription(
-    `ws://${window.location.host}/sockets/audio_queue`,
+    `${window.location.protocol === "https:" ? "wss://" : "ws://"}${window.location.host
+    }/sockets/audio_queue`,
     (key, { next }) => {
       const socket = new WebSocket(key);
       socket.addEventListener("message", (event) => {

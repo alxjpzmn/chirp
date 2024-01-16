@@ -1,7 +1,7 @@
 const getFeedMetadata = (host: string) => {
   try {
     return {
-      title: "Chirp TTS Feed",
+      title: "Chirp Feed",
       author: "Chirp",
       siteUrl: host,
       feedUrl: `${host}/files/feed`,
@@ -16,6 +16,7 @@ const getFeedMetadata = (host: string) => {
       language: "en",
       pubDate: new Date(),
       itunesSummary: "Your texts — read out loud for you via OpenAI's TTS API.",
+      customElements: ["<itunes:block>Yes</itunes:block>"],
     };
   } catch (e) {
     console.error(`Couldn't generate feed metadata: ${e}`);
