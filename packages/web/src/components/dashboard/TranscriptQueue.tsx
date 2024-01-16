@@ -22,7 +22,8 @@ export const TranscriptQueue = () => {
   const { contentCount, setContentCount } = useContext(UserContentCountContext);
 
   const { data } = useSWRSubscription(
-    `ws://${window.location.host}/sockets/transcripts_queue`,
+    `${window.location.protocol === "https:" ? "wss://" : "ws://"}${window.location.host
+    }/sockets/transcripts_queue`,
     (key, { next }) => {
       const socket = new WebSocket(key);
       socket.addEventListener("message", (event) => {

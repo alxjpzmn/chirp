@@ -7,17 +7,14 @@ import {
   TEMP_RECORDINGS_RELATIVE_PATH,
 } from "@util/misc/constants";
 import chunk from "chunk-text";
+import ffmpegInstance from "./initFfmpeg";
+import db from "@db/init";
 
 const getTextToSpeechFile = async (id: number, text: string) => {
   try {
     const retry = require("async").retry;
 
-    const pathToFfmpeg = require("ffmpeg-static");
-    const pathToFfprobe = require("ffprobe-static");
-    const ffmpeg = require("fluent-ffmpeg");
-    ffmpeg.setFfmpegPath(pathToFfmpeg);
-    ffmpeg.setFfprobePath(pathToFfprobe.path);
-    const command = ffmpeg();
+    const command = ffmpegInstance();
 
     // OpenAI's character limit per request
     const textFragments: string[] = chunk(text, 4096);
@@ -70,7 +67,14 @@ const getTextToSpeechFile = async (id: number, text: string) => {
           }),
       );
     await promisifiedFileCreation();
-    i++;
+    const update_transcript_query = db.query(
+      "UPDATE transcripts SET updated_at = $updated_at WHERE id = $id",
+    );
+
+    update_transcript_query.run({
+      $updated_at: new Date().toISOString(),
+      $id: id,
+    });
   } catch (e) {
     console.error(e);
     throw new Error(`${e}`);

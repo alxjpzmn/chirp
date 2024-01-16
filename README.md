@@ -14,7 +14,7 @@ Convert the text content of URLs into a podcast feed, each article becoming an e
 
 3. You'll also need a Redis server running, e.g. through their official [Docker image](https://hub.docker.com/_/redis/)
 
-4. To run the docker container after you've built it, you could take this command as starting point, assuming that you run Redis using Docker on the default port (6379): `docker run -d -p 3000:3000 --volume=/replace-with-custom-directory:/data -e "DATA_DIR=/data" -e "REDIS_URL=host.docker.internal" -e "OPENAI_API_KEY="replace-with-your-openai-api-key" chirp`
+4. To run the docker container after you've built it, you could take this command as starting point, assuming that you run Redis using Docker on the default port (6379): `docker run -d -p 3000:3000 --volume=/replace-with-custom-directory:/data -e "DATA_DIR=/data" -e "REDIS_HOST=host.docker.internal" -e "OPENAI_API_KEY="replace-with-your-openai-api-key" chirp`
 
 5. You can configure the following environment variables (if you run Chirp via `bun run dev`, just create a `.env` file inside the `packages/core` directory and add them there):
 
@@ -24,8 +24,10 @@ Convert the text content of URLs into a podcast feed, each article becoming an e
    | PASSWORD          | Optional, adds basic authentication using JWTs for your instance. Beware that your feed itself and its data are always public since podcast players don't play well with authentication. |
    | MAX_ARTICLE_CHARS | Optional, this is useful for development if you want to test things and don't want to rack up bills with OpenAI. I use 200 in development.                                               |
    | SSL               | Optional, in case you have Chirp served via HTTPS you will need to set this to true or the feed won't work. Defaults to false.                                                           |
-   | PORT              | Optional, defaults to 3000.                                                                                                                                                              |
+   | PORT              | Optional, defaults to `3000`.                                                                                                                                                            |
    | DATA_DIR          | Optional, defaults to the directory Chirp is being executed from.                                                                                                                        |
+   | REDIS_HOST        | Optional, defaults to `localhost`. If not specified, a Redis instance will be spin up.                                                                                                   |
+   | REDIS_PORT        | Optional, defaults to `6379`.                                                                                                                                                            |
 
 ## Developer Guide
 
