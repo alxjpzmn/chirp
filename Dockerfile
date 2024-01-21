@@ -1,6 +1,6 @@
-FROM --platform=$TARGETPLATFORM oven/bun:latest as base
+FROM --platform=$BUILDPLATFORM oven/bun:latest as base
 
-FROM --platform=$TARGETPLATFORM base AS builder
+FROM --platform=$BUILDPLATFORM base AS builder
 WORKDIR /app
 COPY ./packages ./packages
 COPY package.json ./
@@ -12,7 +12,7 @@ RUN echo "Building base image for platform"
 RUN echo $BUILDPLATFORM
 RUN bun run build
 
-FROM --platform=$TARGETPLATFORM base AS release
+FROM --platform=$TARGETPLATFORM oven/bun:slim AS release
 LABEL org.opencontainers.image.source=https://github.com/alxjpzmn/chirp
 LABEL org.opencontainers.image.description "Convert the text content of URLs into a podcast feed, each article becoming an episode read by OpenAI's TTS API"
 LABEL org.opencontainers.image.licenses=MIT
