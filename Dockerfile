@@ -11,7 +11,7 @@ RUN bun build ./index.ts --target node --external fluent-ffmpeg --external chunk
 WORKDIR /app/packages/web
 RUN bun run build
 
-FROM --platform=$BUILDPLATFORM base AS release
+FROM --platform=$TARGETPLATFORM base AS release
 LABEL org.opencontainers.image.source=https://github.com/alxjpzmn/chirp
 LABEL org.opencontainers.image.description "Convert the text content of URLs into a podcast feed, each article becoming an episode read by OpenAI's TTS API"
 LABEL org.opencontainers.image.licenses=MIT
