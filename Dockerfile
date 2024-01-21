@@ -1,6 +1,4 @@
-FROM --platform=$BUILDPLATFORM oven/bun:latest as base
-
-FROM --platform=$BUILDPLATFORM base AS builder
+FROM --platform=$BUILDPLATFORM oven/bun:latest AS builder
 WORKDIR /app
 COPY ./packages ./packages
 COPY package.json ./
@@ -8,8 +6,6 @@ RUN bun install --concurrent-scripts 1
 WORKDIR /app/packages/core
 RUN bun build ./index.ts --target node --external fluent-ffmpeg --external chunk-text --outdir './build'
 WORKDIR /app/packages/web
-RUN echo "Building base image for platform"
-RUN echo $BUILDPLATFORM
 RUN bun run build
 
 FROM --platform=$TARGETPLATFORM oven/bun:slim AS release
@@ -17,13 +13,9 @@ LABEL org.opencontainers.image.source=https://github.com/alxjpzmn/chirp
 LABEL org.opencontainers.image.description "Convert the text content of URLs into a podcast feed, each article becoming an episode read by OpenAI's TTS API"
 LABEL org.opencontainers.image.licenses=MIT
 
-RUN echo "Building release image for platform"
-RUN echo $TARGETPLATFORM
-
 ENV NODE_ENV=production
 ENV DATA_DIR=/data
 RUN apt-get update && apt-get install -y redis-server
-
 
 COPY startup.sh /app/startup.sh
 RUN chmod +x /app/startup.sh
