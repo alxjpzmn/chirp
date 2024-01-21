@@ -11,4 +11,3 @@ if [ -z "${!ENV_VAR_NAME}" ]; then
 fi
 
 exec bun run /app/index.js
-
