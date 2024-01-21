@@ -1,6 +1,6 @@
-FROM --platform=$BUILDPLATFORM oven/bun:latest as base
+FROM --platform=$TARGETPLATFORM oven/bun:latest as base
 
-FROM --platform=$BUILDPLATFORM base AS builder
+FROM --platform=$TARGETPLATFORM base AS builder
 WORKDIR /app
 COPY ./packages ./packages
 COPY package.json ./
