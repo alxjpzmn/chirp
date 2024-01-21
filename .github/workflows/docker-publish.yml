@@ -27,11 +27,16 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      # - name: Extract metadata (tags, labels) for Docker
-      #   id: meta
-      #   uses: docker/metadata-action@v5
-      #   with:
-      #     images: ghcr.io/${{ github.repository }}
+      - name: Debug Information
+        run: |
+          echo "Detected platforms: $BUILDPLATFORM, $TARGETPLATFORM"
+          docker buildx ls
+          docker buildx inspect default
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
