@@ -4,7 +4,7 @@ FROM --platform=$TARGETPLATFORM base AS builder
 WORKDIR /app
 COPY ./packages ./packages
 COPY package.json ./
-RUN bun install --concurrent-scripts 1 -g
+RUN bun install --concurrent-scripts 1
 WORKDIR /app/packages/core
 RUN bun build ./index.ts --target node --external fluent-ffmpeg --external chunk-text --outdir './build'
 WORKDIR /app/packages/web
