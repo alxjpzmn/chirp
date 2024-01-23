@@ -20,7 +20,7 @@ docker run -d \
   -v /home/your-chirp-data:/data \
   -e OPENAI_API_KEY=your-openai-api-key \
   -p 3000:3000 \
-  ghcr.io/alxjpzmn/chirp:latest`
+  ghcr.io/alxjpzmn/chirp:latest
 ```
 
 ### Setup
